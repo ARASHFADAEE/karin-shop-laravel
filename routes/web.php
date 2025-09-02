@@ -24,6 +24,7 @@ use App\Livewire\Admin\Coupons\Edit as CouponsEdit;
 use App\Livewire\Admin\Reviews\Index as ReviewsIndex;
 use App\Livewire\Admin\Settings;
 use App\Livewire\Auth\Login;
+use App\Http\Controllers\Admin\OrderPrintController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,6 +60,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders/create', OrdersCreate::class)->name('orders.create');
     Route::get('/orders/{order}', OrdersShow::class)->name('orders.show');
     Route::get('/orders/{order}/edit', OrdersEdit::class)->name('orders.edit');
+    
+    // Order Print HTML Views
+    Route::get('/orders/{order}/invoice-html', [OrderPrintController::class, 'invoiceHtml'])->name('orders.invoice-html');
+    Route::get('/orders/{order}/shipping-label-html', [OrderPrintController::class, 'shippingLabelHtml'])->name('orders.shipping-label-html');
     
     // Coupons Management
     Route::get('/coupons', CouponsIndex::class)->name('coupons.index');

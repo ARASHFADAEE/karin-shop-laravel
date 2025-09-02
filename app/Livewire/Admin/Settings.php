@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
@@ -64,6 +65,43 @@ class Settings extends Component
 
     #[Rule('required|numeric|min:0')]
     public string $shipping_cost = '0';
+    
+    // Invoice Settings
+    #[Rule('required|string|max:100')]
+    public string $invoice_company_name = 'کارین شاپ';
+    
+    #[Rule('required|string|max:20')]
+    public string $invoice_company_phone = '۰۹۱۴۰۰۶۳۷۹';
+    
+    #[Rule('required|email|max:100')]
+    public string $invoice_company_email = 'info@karinshop.com';
+    
+    #[Rule('nullable|string')]
+    public string $invoice_company_address = '';
+    
+    #[Rule('nullable|url|max:255')]
+    public string $invoice_company_website = '';
+    
+    #[Rule('nullable|url|max:255')]
+    public string $invoice_logo_url = '';
+    
+    #[Rule('required|string|max:7')]
+    public string $invoice_primary_color = '#2563eb';
+    
+    #[Rule('required|string|max:7')]
+    public string $invoice_secondary_color = '#1e40af';
+    
+    #[Rule('required|string|max:255')]
+    public string $invoice_footer_text = 'با تشکر از خرید شما';
+    
+    #[Rule('nullable|string')]
+    public string $invoice_terms = '';
+    
+    #[Rule('boolean')]
+    public bool $invoice_show_watermark = true;
+    
+    #[Rule('required|string|max:50')]
+    public string $invoice_watermark_text = 'کارین شاپ';
 
     #[Rule('required|numeric|min:0')]
     public string $free_shipping_threshold = '0';
@@ -78,39 +116,53 @@ class Settings extends Component
 
     public function loadSettings()
     {
-        // Load settings from cache or database
-        $settings = Cache::get('site_settings', []);
+        // Load settings from database
+        $setting = Setting::first();
         
-        $this->site_name = $settings['site_name'] ?? config('app.name', 'فروشگاه کارین');
-        $this->site_description = $settings['site_description'] ?? '';
-        $this->contact_email = $settings['contact_email'] ?? '';
-        $this->contact_phone = $settings['contact_phone'] ?? '';
-        $this->site_address = $settings['site_address'] ?? '';
+        $this->site_name = $setting->site_name ?? config('app.name', 'فروشگاه کارین');
+        $this->site_description = $setting->site_description ?? '';
+        $this->contact_email = $setting->contact_email ?? '';
+        $this->contact_phone = $setting->contact_phone ?? '';
+        $this->site_address = $setting->site_address ?? '';
         
-        $this->zarinpal_merchant_id = $settings['zarinpal_merchant_id'] ?? '';
-        $this->mellat_terminal_id = $settings['mellat_terminal_id'] ?? '';
-        $this->mellat_username = $settings['mellat_username'] ?? '';
-        $this->mellat_password = $settings['mellat_password'] ?? '';
+        $this->zarinpal_merchant_id = $setting->zarinpal_merchant_id ?? '';
+        $this->mellat_terminal_id = $setting->mellat_terminal_id ?? '';
+        $this->mellat_username = $setting->mellat_username ?? '';
+        $this->mellat_password = $setting->mellat_password ?? '';
         
-        $this->sms_api_key = $settings['sms_api_key'] ?? '';
-        $this->sms_sender_number = $settings['sms_sender_number'] ?? '';
+        $this->sms_api_key = $setting->sms_api_key ?? '';
+        $this->sms_sender_number = $setting->sms_sender_number ?? '';
         
-        $this->smtp_host = $settings['smtp_host'] ?? '';
-        $this->smtp_port = $settings['smtp_port'] ?? '587';
-        $this->smtp_username = $settings['smtp_username'] ?? '';
-        $this->smtp_password = $settings['smtp_password'] ?? '';
+        $this->smtp_host = $setting->smtp_host ?? '';
+        $this->smtp_port = $setting->smtp_port ?? '587';
+        $this->smtp_username = $setting->smtp_username ?? '';
+        $this->smtp_password = $setting->smtp_password ?? '';
         
-        $this->currency = $settings['currency'] ?? 'تومان';
-        $this->shipping_cost = $settings['shipping_cost'] ?? '0';
-        $this->free_shipping_threshold = $settings['free_shipping_threshold'] ?? '0';
-        $this->max_order_items = $settings['max_order_items'] ?? '10';
+        $this->currency = $setting->currency ?? 'تومان';
+        $this->shipping_cost = $setting->shipping_cost ?? '0';
+        $this->free_shipping_threshold = $setting->free_shipping_threshold ?? '0';
+        $this->max_order_items = $setting->max_order_items ?? '10';
+        
+        // Invoice Settings
+        $this->invoice_company_name = $setting->invoice_company_name ?? 'کارین شاپ';
+        $this->invoice_company_phone = $setting->invoice_company_phone ?? '۰۹۱۴۰۰۶۳۷۹';
+        $this->invoice_company_email = $setting->invoice_company_email ?? 'info@karinshop.com';
+        $this->invoice_company_address = $setting->invoice_company_address ?? '';
+        $this->invoice_company_website = $setting->invoice_company_website ?? '';
+        $this->invoice_logo_url = $setting->invoice_logo_url ?? '';
+        $this->invoice_primary_color = $setting->invoice_primary_color ?? '#2563eb';
+        $this->invoice_secondary_color = $setting->invoice_secondary_color ?? '#1e40af';
+        $this->invoice_footer_text = $setting->invoice_footer_text ?? 'با تشکر از خرید شما';
+        $this->invoice_terms = $setting->invoice_terms ?? '';
+        $this->invoice_show_watermark = $setting->invoice_show_watermark ?? true;
+        $this->invoice_watermark_text = $setting->invoice_watermark_text ?? 'کارین شاپ';
     }
 
     public function save()
     {
         $this->validate();
 
-        $settings = [
+        $data = [
             'site_name' => $this->site_name,
             'site_description' => $this->site_description,
             'contact_email' => $this->contact_email,
@@ -130,10 +182,24 @@ class Settings extends Component
             'shipping_cost' => $this->shipping_cost,
             'free_shipping_threshold' => $this->free_shipping_threshold,
             'max_order_items' => $this->max_order_items,
+            
+            // Invoice Settings
+            'invoice_company_name' => $this->invoice_company_name,
+            'invoice_company_phone' => $this->invoice_company_phone,
+            'invoice_company_email' => $this->invoice_company_email,
+            'invoice_company_address' => $this->invoice_company_address,
+            'invoice_company_website' => $this->invoice_company_website,
+            'invoice_logo_url' => $this->invoice_logo_url,
+            'invoice_primary_color' => $this->invoice_primary_color,
+            'invoice_secondary_color' => $this->invoice_secondary_color,
+            'invoice_footer_text' => $this->invoice_footer_text,
+            'invoice_terms' => $this->invoice_terms,
+            'invoice_show_watermark' => $this->invoice_show_watermark,
+            'invoice_watermark_text' => $this->invoice_watermark_text,
         ];
 
-        // Save to cache
-        Cache::put('site_settings', $settings, now()->addDays(30));
+        // Save to database
+        Setting::updateOrCreate([], $data);
 
         session()->flash('success', 'تنظیمات با موفقیت ذخیره شد.');
     }

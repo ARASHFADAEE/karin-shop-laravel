@@ -273,6 +273,168 @@
             </div>
         </div>
 
+        <!-- Invoice Settings -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">تنظیمات فاکتور</h3>
+            
+            <!-- Company Information -->
+            <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-800 mb-4">اطلاعات شرکت</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="invoice_company_name" class="block text-sm font-medium text-gray-700 mb-2">نام شرکت</label>
+                        <input type="text" 
+                               id="invoice_company_name"
+                               wire:model="invoice_company_name" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کارین شاپ">
+                        @error('invoice_company_name')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="invoice_company_phone" class="block text-sm font-medium text-gray-700 mb-2">تلفن شرکت</label>
+                        <input type="text" 
+                               id="invoice_company_phone"
+                               wire:model="invoice_company_phone" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="۰۹۱۴۰۰۶۳۷۹">
+                        @error('invoice_company_phone')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="invoice_company_email" class="block text-sm font-medium text-gray-700 mb-2">ایمیل شرکت</label>
+                        <input type="email" 
+                               id="invoice_company_email"
+                               wire:model="invoice_company_email" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="info@karinshop.com">
+                        @error('invoice_company_email')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="invoice_company_website" class="block text-sm font-medium text-gray-700 mb-2">وب‌سایت شرکت</label>
+                        <input type="url" 
+                               id="invoice_company_website"
+                               wire:model="invoice_company_website" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="https://karinshop.com">
+                        @error('invoice_company_website')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <label for="invoice_company_address" class="block text-sm font-medium text-gray-700 mb-2">آدرس شرکت</label>
+                    <textarea id="invoice_company_address"
+                              wire:model="invoice_company_address" 
+                              rows="3"
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="آدرس کامل شرکت..."></textarea>
+                    @error('invoice_company_address')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+            
+            <!-- Design Settings -->
+            <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-800 mb-4">تنظیمات طراحی</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="invoice_logo_url" class="block text-sm font-medium text-gray-700 mb-2">لینک لوگو</label>
+                        <input type="url" 
+                               id="invoice_logo_url"
+                               wire:model="invoice_logo_url" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="https://example.com/logo.png">
+                        @error('invoice_logo_url')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="invoice_primary_color" class="block text-sm font-medium text-gray-700 mb-2">رنگ اصلی</label>
+                        <input type="color" 
+                               id="invoice_primary_color"
+                               wire:model="invoice_primary_color" 
+                               class="w-full h-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('invoice_primary_color')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="invoice_secondary_color" class="block text-sm font-medium text-gray-700 mb-2">رنگ فرعی</label>
+                        <input type="color" 
+                               id="invoice_secondary_color"
+                               wire:model="invoice_secondary_color" 
+                               class="w-full h-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @error('invoice_secondary_color')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Settings -->
+            <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-800 mb-4">تنظیمات فوتر و واترمارک</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="invoice_footer_text" class="block text-sm font-medium text-gray-700 mb-2">متن فوتر</label>
+                        <input type="text" 
+                               id="invoice_footer_text"
+                               wire:model="invoice_footer_text" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="با تشکر از خرید شما">
+                        @error('invoice_footer_text')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="invoice_watermark_text" class="block text-sm font-medium text-gray-700 mb-2">متن واترمارک</label>
+                        <input type="text" 
+                               id="invoice_watermark_text"
+                               wire:model="invoice_watermark_text" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کارین شاپ">
+                        @error('invoice_watermark_text')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" 
+                               wire:model="invoice_show_watermark" 
+                               class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        <span class="mr-2 text-sm text-gray-700">نمایش واترمارک در فاکتور</span>
+                    </label>
+                </div>
+                
+                <div class="mt-4">
+                    <label for="invoice_terms" class="block text-sm font-medium text-gray-700 mb-2">شرایط و قوانین</label>
+                    <textarea id="invoice_terms"
+                              wire:model="invoice_terms" 
+                              rows="3"
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="شرایط و قوانین فروش..."></textarea>
+                    @error('invoice_terms')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
         <!-- Security Warning -->
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <div class="flex items-start">

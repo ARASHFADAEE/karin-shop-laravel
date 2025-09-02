@@ -92,6 +92,16 @@ class Show extends Component
     {
         return $this->printShippingLabel();
     }
+    
+    public function showInvoiceHtml()
+    {
+        return redirect()->route('admin.orders.invoice-html', $this->order->id);
+    }
+    
+    public function showShippingLabelHtml()
+    {
+        return redirect()->route('admin.orders.shipping-label-html', $this->order->id);
+    }
 
     #[Layout('layouts.admin')]
     public function render()

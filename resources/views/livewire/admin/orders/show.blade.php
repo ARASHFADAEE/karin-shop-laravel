@@ -42,46 +42,32 @@
                     <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                         <div class="py-2">
                             <!-- Invoice Option -->
-                            <button wire:click="downloadInvoice" class="w-full text-right px-4 py-3 hover:bg-gray-50 flex items-center">
+                            <button wire:click="showInvoiceHtml" class="w-full text-right px-4 py-3 hover:bg-gray-50 flex items-center">
                                 <div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center ml-3">
                                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">دانلود فاکتور</div>
-                                    <div class="text-xs text-gray-500">فاکتور کامل سفارش به صورت PDF</div>
+                                    <div class="text-sm font-medium text-gray-900">مشاهده فاکتور</div>
+                                    <div class="text-xs text-gray-500">فاکتور کامل سفارش با امکان چاپ و دانلود</div>
                                 </div>
                             </button>
                             
                             <!-- Shipping Label Option -->
-                            <button wire:click="downloadShippingLabel" class="w-full text-right px-4 py-3 hover:bg-gray-50 flex items-center">
+                            <button wire:click="showShippingLabelHtml" class="w-full text-right px-4 py-3 hover:bg-gray-50 flex items-center">
                                 <div class="flex-shrink-0 w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center ml-3">
                                     <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">دانلود برچسب ارسال</div>
-                                    <div class="text-xs text-gray-500">برچسب برای چسباندن روی بسته</div>
+                                    <div class="text-sm font-medium text-gray-900">مشاهده برچسب ارسال</div>
+                                    <div class="text-xs text-gray-500">برچسب برای چسباندن روی بسته با امکان چاپ</div>
                                 </div>
                             </button>
                             
-                            <!-- Divider -->
-                            <div class="border-t border-gray-100 my-2"></div>
-                            
-                            <!-- Quick Print Both -->
-                            <div class="px-4 py-2">
-                                <div class="text-xs font-medium text-gray-700 mb-2">چاپ سریع</div>
-                                <div class="flex space-x-2 space-x-reverse">
-                                    <button wire:click="downloadInvoice" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded text-xs font-medium">
-                                        فاکتور
-                                    </button>
-                                    <button wire:click="downloadShippingLabel" class="flex-1 bg-orange-50 hover:bg-orange-100 text-orange-700 px-3 py-2 rounded text-xs font-medium">
-                                        برچسب
-                                    </button>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
