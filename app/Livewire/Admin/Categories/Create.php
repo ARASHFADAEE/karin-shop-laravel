@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    #[Rule('required|string|max:100')]
+    #[Rule('required|string|max:100|unique:categories,name')]
     public string $name = '';
     
     #[Rule('required|string|max:150|unique:categories,slug')]
@@ -22,6 +22,9 @@ class Create extends Component
 
     #[Rule('nullable|string')]
     public string $description = '';
+    
+    #[Rule('required|in:active,inactive')]
+    public string $status = 'active';
 
     public bool $isGeneratingSlug = false;
 
@@ -89,6 +92,7 @@ class Create extends Component
             'parent_id' => $this->parent_id ?: null,
             'slug' => $this->slug,
             'description' => $this->description,
+            'status' => $this->status,
         ]);
 
         session()->flash('success', 'دسته‌بندی جدید با موفقیت ایجاد شد.');

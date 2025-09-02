@@ -76,13 +76,15 @@ class Index extends Component
     #[Layout('layouts.admin')]
     public function render()
     {
-        $products = Product::with('category')
+        $products = Product::with('categories')
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('sku', 'like', '%' . $this->search . '%');
             })
             ->when($this->category_id, function ($query) {
-                $query->where('category_id', $this->category_id);
+                $query->whereHas('categories', function ($q) {
+                    $q->where('categories.id', $this->category_id);
+                });
             })
             ->when($this->status, function ($query) {
                 $query->where('status', $this->status);

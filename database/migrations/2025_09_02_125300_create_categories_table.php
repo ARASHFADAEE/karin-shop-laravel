@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 150);
             $table->string('slug', 150)->unique();
             $table->text('description')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             
             $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');

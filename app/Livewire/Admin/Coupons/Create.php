@@ -35,7 +35,7 @@ class Create extends Component
 
     public function generateCode()
     {
-        $this->code = 'COUPON' . strtoupper(substr(md5(time()), 0, 6));
+        $this->code = strtoupper(substr(md5(time()), 0, 10));
     }
 
     public function save()

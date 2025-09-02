@@ -13,19 +13,38 @@ class Edit extends Component
 {
     public Category $category;
 
-    #[Rule('required|string|max:100')]
     public string $name = '';
     
-    #[Rule('required|string|max:150')]
     public string $slug = '';
 
-    #[Rule('nullable|exists:categories,id')]
     public string $parent_id = '';
 
     #[Rule('nullable|string')]
     public string $description = '';
+    
+    #[Rule('required|in:active,inactive')]
+    public string $status = 'active';
 
     public bool $isGeneratingSlug = false;
+    
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:100|unique:categories,name,' . $this->category->id,
+            'slug' => 'required|string|max:150|unique:categories,slug,' . $this->category->id,
+            'parent_id' => [
+                'nullable',
+                'exists:categories,id',
+                function ($attribute, $value, $fail) {
+                    if ($value == $this->category->id) {
+                        $fail('دسته‌بندی نمی‌تواند والد خودش باشد.');
+                    }
+                },
+            ],
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+        ];
+    }
 
     public function mount(Category $category)
     {
@@ -34,6 +53,7 @@ class Edit extends Component
         $this->slug = $category->slug;
         $this->parent_id = $category->parent_id ?? '';
         $this->description = $category->description ?? '';
+        $this->status = $category->status ?? 'active';
     }
 
     public function generateSlug()
@@ -100,6 +120,7 @@ class Edit extends Component
             'parent_id' => $this->parent_id ?: null,
             'slug' => $this->slug,
             'description' => $this->description,
+            'status' => $this->status,
         ]);
 
         session()->flash('success', 'دسته‌بندی با موفقیت به‌روزرسانی شد.');

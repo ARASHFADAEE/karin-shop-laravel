@@ -1,11 +1,57 @@
 @import 'tailwindcss';
 
+/* IRANYekan Variable Font */
+@font-face {
+    font-family: 'IRANYekan';
+    src: url('./IRANYekanXVF.woff2') format('woff2'),
+         url('./IRANYekanXVF.woff') format('woff');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+    font-variation-settings: "wght" 400, "dots" 2;
+    unicode-range: U+0600-06FF, U+200C-200D, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE80-FEFC;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'IRANYekan', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Global font variation settings for IRANYekan */
+body, .font-sans {
+    font-variation-settings: "wght" 400, "dots" 2;
+}
+
+/* Font weight variations */
+.font-light {
+    font-variation-settings: "wght" 300, "dots" 2;
+}
+
+.font-normal {
+    font-variation-settings: "wght" 400, "dots" 2;
+}
+
+.font-medium {
+    font-variation-settings: "wght" 500, "dots" 2;
+}
+
+.font-semibold {
+    font-variation-settings: "wght" 600, "dots" 2;
+}
+
+.font-bold {
+    font-variation-settings: "wght" 700, "dots" 2;
+}
+
+.font-extrabold {
+    font-variation-settings: "wght" 800, "dots" 2;
+}
+
+.font-black {
+    font-variation-settings: "wght" 900, "dots" 2;
 }

@@ -30,6 +30,22 @@ class Order extends Model
         'shipping_amount' => 'decimal:2',
         'tax_amount' => 'decimal:2',
     ];
+    
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($order) {
+            if (empty($order->order_number)) {
+                $order->order_number = 'KS' . date('Y') . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+                
+                // اطمینان از یکتا بودن شماره سفارش
+                while (static::where('order_number', $order->order_number)->exists()) {
+                    $order->order_number = 'KS' . date('Y') . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+                }
+            }
+        });
+    }
 
     // Relationships
     public function user()

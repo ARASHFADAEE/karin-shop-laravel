@@ -7,8 +7,20 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <style>
+            @font-face {
+                font-family: 'IRANYekan';
+                src: url('/build/fonts/IRANYekanXVF.woff2') format('woff2'),
+                     url('/build/fonts/IRANYekanXVF.woff') format('woff');
+                font-weight: 100 900;
+                font-style: normal;
+                font-display: swap;
+            }
+            body {
+                font-family: 'IRANYekan', 'Tahoma', sans-serif;
+                font-variation-settings: "wght" 400, "dots" 2;
+            }
+        </style>
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))

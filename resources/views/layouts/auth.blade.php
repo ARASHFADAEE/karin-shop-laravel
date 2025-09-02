@@ -7,18 +7,14 @@
 
     <title>{{ config('app.name', 'Laravel') }} - ورود مدیریت</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
     <style>
         body {
-            font-family: 'Vazirmatn', sans-serif;
+            font-family: 'IRANYekan', 'Tahoma', sans-serif;
+            font-variation-settings: "wght" 400, "dots" 2;
         }
     </style>
 </head>

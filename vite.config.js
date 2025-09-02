@@ -10,4 +10,21 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        rollupOptions: {
+            external: [],
+            output: {
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name && assetInfo.name.endsWith('.woff2')) {
+                        return 'fonts/[name][extname]';
+                    }
+                    if (assetInfo.name && assetInfo.name.endsWith('.woff')) {
+                        return 'fonts/[name][extname]';
+                    }
+                    return 'assets/[name]-[hash][extname]';
+                }
+            }
+        }
+    },
+    assetsInclude: ['**/*.woff', '**/*.woff2']
 });
