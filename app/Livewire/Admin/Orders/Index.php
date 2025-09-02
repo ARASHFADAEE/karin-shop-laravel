@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Orders;
 
 use App\Models\Order;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -35,6 +36,7 @@ class Index extends Component
         }
     }
 
+    #[Layout('layouts.admin')]
     public function render()
     {
         $orders = Order::with('user')

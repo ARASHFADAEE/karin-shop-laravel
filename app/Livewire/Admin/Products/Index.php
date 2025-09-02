@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Products;
 
 use App\Models\Product;
 use App\Models\Category;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -37,11 +38,23 @@ class Index extends Component
     {
         $product = Product::find($productId);
         if ($product) {
+            // بررسی اینکه آیا محصول در سفارشات استفاده شده
+            if ($product->orderItems()->count() > 0) {
+                session()->flash('error', 'این محصول در سفارشات استفاده شده و قابل حذف نیست.');
+                return;
+            }
+            
+            // حذف تصاویر مرتبط
+            $product->images()->delete();
+            $product->featuredImages()->delete();
+            $product->attributes()->delete();
+            
             $product->delete();
             session()->flash('success', 'محصول با موفقیت حذف شد.');
         }
     }
 
+    #[Layout('layouts.admin')]
     public function render()
     {
         $products = Product::with('category')

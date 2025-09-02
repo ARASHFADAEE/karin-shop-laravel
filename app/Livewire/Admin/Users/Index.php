@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Users;
 
 use App\Models\User;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -29,12 +30,30 @@ class Index extends Component
     public function deleteUser($userId)
     {
         $user = User::find($userId);
-        if ($user && $user->id !== auth()->id()) {
+        if ($user) {
+            // جلوگیری از حذف ادمین فعلی
+            if ($user->id === auth()->user()->id) {
+                session()->flash('error', 'نمی‌توانید خودتان را حذف کنید.');
+                return;
+            }
+            
+            // بررسی اینکه آیا کاربر سفارش دارد
+            if ($user->orders()->count() > 0) {
+                session()->flash('error', 'این کاربر دارای سفارش است و قابل حذف نیست.');
+                return;
+            }
+            
+            // حذف داده‌های مرتبط
+            $user->carts()->delete();
+            $user->wishlists()->delete();
+            $user->reviews()->delete();
+            
             $user->delete();
             session()->flash('success', 'کاربر با موفقیت حذف شد.');
         }
     }
 
+    #[Layout('layouts.admin')]
     public function render()
     {
         $users = User::query()
@@ -48,8 +67,6 @@ class Index extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.users.index', compact('users'))
-            ->layout('layouts.admin')
-            ->section('title', 'مدیریت کاربران');
+        return view('livewire.admin.users.index', compact('users'));
     }
 }
