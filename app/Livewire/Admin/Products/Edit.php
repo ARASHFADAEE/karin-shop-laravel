@@ -33,6 +33,24 @@ class Edit extends Component
     #[Rule('required|numeric|min:0')]
     public string $price = '';
 
+    #[Rule('nullable|numeric|min:0')]
+    public string $original_price = '';
+
+    #[Rule('nullable|numeric|min:0|max:100')]
+    public string $discount_percentage = '';
+
+    #[Rule('nullable|numeric|min:0')]
+    public string $discount_amount = '';
+
+    #[Rule('boolean')]
+    public bool $has_discount = false;
+
+    #[Rule('nullable|date')]
+    public string $discount_starts_at = '';
+
+    #[Rule('nullable|date')]
+    public string $discount_ends_at = '';
+
     #[Rule('required|integer|min:0')]
     public string $stock = '';
 
@@ -79,11 +97,17 @@ class Edit extends Component
     {
         $this->product = $product->load(['images', 'featuredImages', 'categories', 'attributes']);
         
-        // Basic fields
+        // Load basic product data
         $this->name = $product->name;
         $this->slug = $product->slug;
         $this->description = $product->description ?? '';
         $this->price = $product->price;
+        $this->original_price = $product->original_price ?? '';
+        $this->discount_percentage = $product->discount_percentage ?? '';
+        $this->discount_amount = $product->discount_amount ?? '';
+        $this->has_discount = $product->has_discount;
+        $this->discount_starts_at = $product->discount_starts_at ? $product->discount_starts_at->format('Y-m-d\TH:i') : '';
+        $this->discount_ends_at = $product->discount_ends_at ? $product->discount_ends_at->format('Y-m-d\TH:i') : '';
         $this->stock = $product->stock;
         $this->sku = $product->sku;
         $this->status = $product->status;
@@ -229,6 +253,12 @@ class Edit extends Component
             'og_description' => $this->og_description,
             'og_image' => $this->og_image,
             'price' => $this->price,
+            'original_price' => $this->original_price ?: null,
+            'discount_percentage' => $this->discount_percentage ?: null,
+            'discount_amount' => $this->discount_amount ?: null,
+            'has_discount' => $this->has_discount,
+            'discount_starts_at' => $this->discount_starts_at ?: null,
+            'discount_ends_at' => $this->discount_ends_at ?: null,
             'stock' => $this->stock,
             'sku' => $this->sku,
             'status' => $this->status,

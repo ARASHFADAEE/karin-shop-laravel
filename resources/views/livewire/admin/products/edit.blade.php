@@ -151,20 +151,7 @@
                         @endif
                     </div>
 
-                    <!-- Price -->
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان) *</label>
-                        <input type="number" 
-                               id="price"
-                               wire:model="price" 
-                               step="0.01"
-                               min="0"
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               placeholder="0">
-                        @error('price')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+
 
                     <!-- Stock -->
                     <div>
@@ -179,6 +166,140 @@
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discount Settings -->
+        <div class="bg-white shadow rounded-lg mb-6">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">تنظیمات تخفیف</h3>
+                <p class="text-sm text-gray-600 mt-1">تنظیم تخفیف برای محصول</p>
+            </div>
+            
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Has Discount -->
+                    <div class="lg:col-span-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                   id="has_discount"
+                                   wire:model.live="has_discount" 
+                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label for="has_discount" class="mr-2 text-sm font-medium text-gray-700">این محصول تخفیف دارد</label>
+                        </div>
+                        @error('has_discount')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    @if($has_discount)
+                        <!-- Original Price -->
+                        <div>
+                            <label for="original_price" class="block text-sm font-medium text-gray-700 mb-2">قیمت اصلی (تومان)</label>
+                            <input type="number" 
+                                   id="original_price"
+                                   wire:model="original_price" 
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="قیمت قبل از تخفیف">
+                            @error('original_price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">قیمت اصلی محصول قبل از اعمال تخفیف</p>
+                        </div>
+
+                        <!-- Current Price (After Discount) -->
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت با تخفیف (تومان) *</label>
+                            <input type="number" 
+                                   id="price"
+                                   wire:model="price" 
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="قیمت نهایی محصول">
+                            @error('price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">قیمت نهایی که مشتری پرداخت می‌کند</p>
+                        </div>
+
+                        <!-- Discount Percentage -->
+                        <div>
+                            <label for="discount_percentage" class="block text-sm font-medium text-gray-700 mb-2">درصد تخفیف</label>
+                            <input type="number" 
+                                   id="discount_percentage"
+                                   wire:model="discount_percentage" 
+                                   min="0"
+                                   max="100"
+                                   step="0.01"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="مثال: 20">
+                            @error('discount_percentage')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">درصد تخفیف (0 تا 100)</p>
+                        </div>
+
+                        <!-- Discount Amount -->
+                        <div>
+                            <label for="discount_amount" class="block text-sm font-medium text-gray-700 mb-2">مبلغ تخفیف (تومان)</label>
+                            <input type="number" 
+                                   id="discount_amount"
+                                   wire:model="discount_amount" 
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="مثال: 50000">
+                            @error('discount_amount')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">مبلغ ثابت تخفیف</p>
+                        </div>
+
+                        <!-- Discount Start Date -->
+                        <div>
+                            <label for="discount_starts_at" class="block text-sm font-medium text-gray-700 mb-2">شروع تخفیف</label>
+                            <input type="datetime-local" 
+                                   id="discount_starts_at"
+                                   wire:model="discount_starts_at" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('discount_starts_at')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">خالی بگذارید برای شروع فوری</p>
+                        </div>
+
+                        <!-- Discount End Date -->
+                        <div>
+                            <label for="discount_ends_at" class="block text-sm font-medium text-gray-700 mb-2">پایان تخفیف</label>
+                            <input type="datetime-local" 
+                                   id="discount_ends_at"
+                                   wire:model="discount_ends_at" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('discount_ends_at')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">خالی بگذارید برای تخفیف دائمی</p>
+                        </div>
+                    @else
+                        <!-- Regular Price -->
+                        <div class="lg:col-span-2">
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان) *</label>
+                            <input type="number" 
+                                   id="price"
+                                   wire:model="price" 
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="قیمت محصول">
+                            @error('price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
 
                     <!-- SKU -->
                     <div>

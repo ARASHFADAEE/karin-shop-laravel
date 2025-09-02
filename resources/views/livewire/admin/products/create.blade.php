@@ -15,15 +15,15 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">اطلاعات اصلی محصول</h3>
             </div>
-            
+
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Name -->
                     <div class="lg:col-span-2">
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">نام محصول *</label>
-                        <input type="text" 
+                        <input type="text"
                                id="name"
-                               wire:model="name" 
+                               wire:model="name"
                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="نام محصول را وارد کنید">
                         @error('name')
@@ -35,12 +35,12 @@
                     <div class="lg:col-span-2">
                         <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">اسلاگ (URL)</label>
                         <div class="flex">
-                            <input type="text" 
+                            <input type="text"
                                    id="slug"
-                                   wire:model="slug" 
+                                   wire:model="slug"
                                    class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                    placeholder="اسلاگ محصول">
-                            <button type="button" 
+                            <button type="button"
                                     wire:click="generateSlug"
                                     wire:loading.attr="disabled"
                                     wire:target="generateSlug"
@@ -58,17 +58,17 @@
                     <!-- Categories (Multi-select with Search) -->
                     <div class="lg:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">دسته‌بندی‌ها *</label>
-                        
+
                         <!-- Category Search and Selection -->
                         <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
                             <!-- Search Input -->
                             <div class="mb-3">
-                                <input type="text" 
+                                <input type="text"
                                        wire:model.live="categorySearch"
                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                        placeholder="جستجو در دسته‌بندی‌ها...">
                             </div>
-                            
+
                             <!-- Categories List (Scrollable) -->
                             <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-lg bg-white">
                                 @php
@@ -79,12 +79,12 @@
                                         });
                                     }
                                 @endphp
-                                
+
                                 @if($filteredCategories->count() > 0)
                                     @foreach($filteredCategories as $category)
                                         <label class="flex items-center p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer">
-                                            <input type="checkbox" 
-                                                   wire:model="selectedCategories" 
+                                            <input type="checkbox"
+                                                   wire:model="selectedCategories"
                                                    value="{{ $category->id }}"
                                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                             <span class="mr-3 text-sm text-gray-700">{{ $category->name }}</span>
@@ -99,7 +99,7 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <!-- Selected Categories Display -->
                             @if(!empty($selectedCategories))
                                 <div class="mt-3">
@@ -108,7 +108,7 @@
                                         @foreach($categories->whereIn('id', $selectedCategories) as $category)
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 {{ $category->name }}
-                                                <button type="button" 
+                                                <button type="button"
                                                         wire:click="removeCategory({{ $category->id }})"
                                                         class="mr-2 text-blue-600 hover:text-blue-800">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,12 +121,12 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                         <!-- Primary Category Selection -->
                         @if(!empty($selectedCategories))
                             <div class="mt-4">
                                 <label for="primaryCategory" class="block text-sm font-medium text-gray-700 mb-2">دسته اصلی *</label>
-                                <select wire:model="primaryCategory" 
+                                <select wire:model="primaryCategory"
                                         id="primaryCategory"
                                         class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option value="">انتخاب دسته اصلی</option>
@@ -139,27 +139,14 @@
                         @endif
                     </div>
 
-                    <!-- Price -->
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان) *</label>
-                        <input type="number" 
-                               id="price"
-                               wire:model="price" 
-                               step="0.01"
-                               min="0"
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               placeholder="0">
-                        @error('price')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+
 
                     <!-- Stock -->
                     <div>
                         <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">موجودی *</label>
-                        <input type="number" 
+                        <input type="number"
                                id="stock"
-                               wire:model="stock" 
+                               wire:model="stock"
                                min="0"
                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="0">
@@ -167,17 +154,152 @@
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discount Settings -->
+        <div class="bg-white shadow rounded-lg mb-6">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">تنظیمات تخفیف</h3>
+                <p class="text-sm text-gray-600 mt-1">تنظیم تخفیف برای محصول</p>
+            </div>
+
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Has Discount -->
+                    <div class="lg:col-span-2">
+                        <div class="flex items-center">
+                            <input type="checkbox"
+                                   id="has_discount"
+                                   wire:model.live="has_discount"
+                                   class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <label for="has_discount" class="mr-2 text-sm font-medium text-gray-700">این محصول تخفیف دارد</label>
+                        </div>
+                        @error('has_discount')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    @if($has_discount)
+                        <!-- Original Price -->
+                        <div>
+                            <label for="original_price" class="block text-sm font-medium text-gray-700 mb-2">قیمت اصلی (تومان)</label>
+                            <input type="number"
+                                   id="original_price"
+                                   wire:model="original_price"
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="قیمت قبل از تخفیف">
+                            @error('original_price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">قیمت اصلی محصول قبل از اعمال تخفیف</p>
+                        </div>
+
+                        <!-- Current Price (After Discount) -->
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت با تخفیف (تومان) *</label>
+                            <input type="number"
+                                   id="price"
+                                   wire:model="price"
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="قیمت نهایی محصول">
+                            @error('price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">قیمت نهایی که مشتری پرداخت می‌کند</p>
+                        </div>
+
+                        <!-- Discount Percentage -->
+                        <div>
+                            <label for="discount_percentage" class="block text-sm font-medium text-gray-700 mb-2">درصد تخفیف</label>
+                            <input type="number"
+                                   id="discount_percentage"
+                                   wire:model="discount_percentage"
+                                   min="0"
+                                   max="100"
+                                   step="0.01"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="مثال: 20">
+                            @error('discount_percentage')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">درصد تخفیف (0 تا 100)</p>
+                        </div>
+
+                        <!-- Discount Amount -->
+                        <div>
+                            <label for="discount_amount" class="block text-sm font-medium text-gray-700 mb-2">مبلغ تخفیف (تومان)</label>
+                            <input type="number"
+                                   id="discount_amount"
+                                   wire:model="discount_amount"
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="مثال: 50000">
+                            @error('discount_amount')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">مبلغ ثابت تخفیف</p>
+                        </div>
+
+                        <!-- Discount Start Date -->
+                        <div>
+                            <label for="discount_starts_at" class="block text-sm font-medium text-gray-700 mb-2">شروع تخفیف</label>
+                            <input type="datetime-local"
+                                   id="discount_starts_at"
+                                   wire:model="discount_starts_at"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('discount_starts_at')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">خالی بگذارید برای شروع فوری</p>
+                        </div>
+
+                        <!-- Discount End Date -->
+                        <div>
+                            <label for="discount_ends_at" class="block text-sm font-medium text-gray-700 mb-2">پایان تخفیف</label>
+                            <input type="datetime-local"
+                                   id="discount_ends_at"
+                                   wire:model="discount_ends_at"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('discount_ends_at')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">خالی بگذارید برای تخفیف دائمی</p>
+                        </div>
+                    @else
+                        <!-- Regular Price -->
+                        <div class="lg:col-span-2">
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان) *</label>
+                            <input type="number"
+                                   id="price"
+                                   wire:model="price"
+                                   min="0"
+                                   step="1000"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="قیمت محصول">
+                            @error('price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+                </div>
 
                     <!-- SKU -->
                     <div>
                         <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">کد محصول (SKU) *</label>
                         <div class="flex">
-                            <input type="text" 
+                            <input type="text"
                                    id="sku"
-                                   wire:model="sku" 
+                                   wire:model="sku"
                                    class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                    placeholder="کد محصول">
-                            <button type="button" 
+                            <button type="button"
                                     wire:click="generateSku"
                                     class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-l-lg border border-gray-600">
                                 تولید کد
@@ -191,7 +313,7 @@
                     <!-- Status -->
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 mb-2">وضعیت *</label>
-                        <select wire:model="status" 
+                        <select wire:model="status"
                                 id="status"
                                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="active">فعال</option>
@@ -206,7 +328,7 @@
                     <!-- Description -->
                     <div class="lg:col-span-2">
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات</label>
-                        <textarea wire:model="description" 
+                        <textarea wire:model="description"
                                   id="description"
                                   rows="4"
                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -225,15 +347,15 @@
                 <h3 class="text-lg font-medium text-gray-900">تنظیمات SEO</h3>
                 <p class="text-sm text-gray-600 mt-1">بهینه‌سازی محصول برای موتورهای جستجو</p>
             </div>
-            
+
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Meta Title -->
                     <div class="lg:col-span-2">
                         <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان متا (Meta Title)</label>
-                        <input type="text" 
+                        <input type="text"
                                id="meta_title"
-                               wire:model="meta_title" 
+                               wire:model="meta_title"
                                maxlength="255"
                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="عنوان صفحه در نتایج جستجو">
@@ -246,7 +368,7 @@
                     <!-- Meta Description -->
                     <div class="lg:col-span-2">
                         <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات متا (Meta Description)</label>
-                        <textarea wire:model="meta_description" 
+                        <textarea wire:model="meta_description"
                                   id="meta_description"
                                   rows="3"
                                   maxlength="160"
@@ -261,9 +383,9 @@
                     <!-- Meta Keywords -->
                     <div class="lg:col-span-2">
                         <label for="meta_keywords" class="block text-sm font-medium text-gray-700 mb-2">کلمات کلیدی (Meta Keywords)</label>
-                        <input type="text" 
+                        <input type="text"
                                id="meta_keywords"
-                               wire:model="meta_keywords" 
+                               wire:model="meta_keywords"
                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="کلمات کلیدی را با کاما جدا کنید">
                         @error('meta_keywords')
@@ -275,9 +397,9 @@
                     <!-- Open Graph Title -->
                     <div>
                         <label for="og_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان شبکه‌های اجتماعی (OG Title)</label>
-                        <input type="text" 
+                        <input type="text"
                                id="og_title"
-                               wire:model="og_title" 
+                               wire:model="og_title"
                                maxlength="255"
                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="عنوان برای اشتراک‌گذاری در شبکه‌های اجتماعی">
@@ -289,9 +411,9 @@
                     <!-- Open Graph Image -->
                     <div>
                         <label for="og_image" class="block text-sm font-medium text-gray-700 mb-2">تصویر شبکه‌های اجتماعی (OG Image)</label>
-                        <input type="url" 
+                        <input type="url"
                                id="og_image"
-                               wire:model="og_image" 
+                               wire:model="og_image"
                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="https://example.com/image.jpg">
                         @error('og_image')
@@ -302,7 +424,7 @@
                     <!-- Open Graph Description -->
                     <div class="lg:col-span-2">
                         <label for="og_description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات شبکه‌های اجتماعی (OG Description)</label>
-                        <textarea wire:model="og_description" 
+                        <textarea wire:model="og_description"
                                   id="og_description"
                                   rows="3"
                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -321,18 +443,18 @@
                 <h3 class="text-lg font-medium text-gray-900">تصاویر محصول</h3>
                 <p class="text-sm text-gray-600 mt-1">آپلود تصاویر محصول و تصاویر شاخص</p>
             </div>
-            
+
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Regular Images -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">تصاویر عادی</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                            <input type="file" 
-                                   wire:model="images" 
-                                   multiple 
+                            <input type="file"
+                                   wire:model="images"
+                                   multiple
                                    accept="image/*"
-                                   class="hidden" 
+                                   class="hidden"
                                    id="regular-images">
                             <label for="regular-images" class="cursor-pointer">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -347,7 +469,7 @@
                         @error('images.*')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        
+
                         @if($images)
                             <div class="mt-3">
                                 <p class="text-sm text-gray-600">{{ count($images) }} فایل انتخاب شده</p>
@@ -359,11 +481,11 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">تصاویر شاخص</label>
                         <div class="border-2 border-dashed border-yellow-300 rounded-lg p-6 text-center hover:border-yellow-400 transition-colors">
-                            <input type="file" 
-                                   wire:model="featuredImages" 
-                                   multiple 
+                            <input type="file"
+                                   wire:model="featuredImages"
+                                   multiple
                                    accept="image/*"
-                                   class="hidden" 
+                                   class="hidden"
                                    id="featured-images">
                             <label for="featured-images" class="cursor-pointer">
                                 <svg class="mx-auto h-12 w-12 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -378,7 +500,7 @@
                         @error('featuredImages.*')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        
+
                         @if($featuredImages)
                             <div class="mt-3">
                                 <p class="text-sm text-gray-600">{{ count($featuredImages) }} فایل انتخاب شده</p>
@@ -395,26 +517,26 @@
                 <h3 class="text-lg font-medium text-gray-900">ویژگی‌های محصول</h3>
                 <p class="text-sm text-gray-600 mt-1">مشخصات فنی و ویژگی‌های محصول</p>
             </div>
-            
+
             <div class="p-6">
                 @foreach($productAttributes as $index => $attribute)
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 border border-gray-200 rounded-lg">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">نام ویژگی</label>
-                            <input type="text" 
-                                   wire:model="productAttributes.{{ $index }}.name" 
+                            <input type="text"
+                                   wire:model="productAttributes.{{ $index }}.name"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                    placeholder="مثال: رنگ، سایز، جنس">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">مقدار ویژگی</label>
                             <div class="flex">
-                                <input type="text" 
-                                       wire:model="productAttributes.{{ $index }}.value" 
+                                <input type="text"
+                                       wire:model="productAttributes.{{ $index }}.value"
                                        class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                        placeholder="مثال: قرمز، XL، پنبه">
                                 @if(count($productAttributes) > 1)
-                                    <button type="button" 
+                                    <button type="button"
                                             wire:click="removeAttribute({{ $index }})"
                                             class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-l-lg">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -426,8 +548,8 @@
                         </div>
                     </div>
                 @endforeach
-                
-                <button type="button" 
+
+                <button type="button"
                         wire:click="addAttribute"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -442,11 +564,11 @@
         <div class="bg-white shadow rounded-lg">
             <div class="p-6">
                 <div class="flex justify-end space-x-3 space-x-reverse">
-                    <a href="{{ route('admin.products.index') }}" 
+                    <a href="{{ route('admin.products.index') }}"
                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-lg">
                         انصراف
                     </a>
-                    <button type="submit" 
+                    <button type="submit"
                             wire:loading.attr="disabled"
                             class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg flex items-center">
                         <span wire:loading.remove>ایجاد محصول</span>
@@ -482,4 +604,3 @@
             </div>
         </div>
     </div>
-</div>

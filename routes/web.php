@@ -17,6 +17,11 @@ use App\Livewire\Admin\Categories\Edit as CategoriesEdit;
 use App\Livewire\Admin\Orders\Index as OrdersIndex;
 use App\Livewire\Admin\Orders\Show as OrdersShow;
 use App\Livewire\Admin\Orders\Create as OrdersCreate;
+use App\Livewire\Admin\Orders\Edit as OrdersEdit;
+use App\Livewire\Admin\Coupons\Index as CouponsIndex;
+use App\Livewire\Admin\Coupons\Create as CouponsCreate;
+use App\Livewire\Admin\Coupons\Edit as CouponsEdit;
+use App\Livewire\Admin\Reviews\Index as ReviewsIndex;
 use App\Livewire\Admin\Settings;
 use App\Livewire\Auth\Login;
 
@@ -53,19 +58,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders', OrdersIndex::class)->name('orders.index');
     Route::get('/orders/create', OrdersCreate::class)->name('orders.create');
     Route::get('/orders/{order}', OrdersShow::class)->name('orders.show');
-    Route::get('/orders/{order}/edit', function () {
-        return 'Edit Order Page';
-    })->name('orders.edit');
+    Route::get('/orders/{order}/edit', OrdersEdit::class)->name('orders.edit');
     
     // Coupons Management
-    Route::get('/coupons', function () {
-        return 'Coupons Index Page';
-    })->name('coupons.index');
+    Route::get('/coupons', CouponsIndex::class)->name('coupons.index');
+    Route::get('/coupons/create', CouponsCreate::class)->name('coupons.create');
+    Route::get('/coupons/{coupon}/edit', CouponsEdit::class)->name('coupons.edit');
     
     // Reviews Management
-    Route::get('/reviews', function () {
-        return 'Reviews Index Page';
-    })->name('reviews.index');
+    Route::get('/reviews', ReviewsIndex::class)->name('reviews.index');
     
     // Settings
     Route::get('/settings', Settings::class)->name('settings');

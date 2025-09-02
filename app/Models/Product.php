@@ -22,6 +22,12 @@ class Product extends Model
         'og_description',
         'og_image',
         'price',
+        'original_price',
+        'discount_percentage',
+        'discount_amount',
+        'has_discount',
+        'discount_starts_at',
+        'discount_ends_at',
         'stock',
         'sku',
         'status',
@@ -29,6 +35,12 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'original_price' => 'decimal:2',
+        'discount_percentage' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'has_discount' => 'boolean',
+        'discount_starts_at' => 'datetime',
+        'discount_ends_at' => 'datetime',
     ];
 
     // Auto-generate slug when creating
@@ -117,9 +129,95 @@ class Product extends Model
         return $value ?: $this->name;
     }
 
-    public function getMetaDescriptionAttribute($value)
+    public function getOgDescriptionAttribute($value)
     {
         return $value ?: Str::limit(strip_tags($this->description), 160);
+    }
+
+    // Discount Methods
+    public function isDiscountActive()
+    {
+        if (!$this->has_discount) {
+            return false;
+        }
+
+        $now = now();
+        
+        // Check if discount period is valid
+        if ($this->discount_starts_at && $now->lt($this->discount_starts_at)) {
+            return false;
+        }
+        
+        if ($this->discount_ends_at && $now->gt($this->discount_ends_at)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    public function getDiscountedPrice()
+    {
+        if (!$this->isDiscountActive()) {
+            return $this->price;
+        }
+
+        $basePrice = $this->original_price ?: $this->price;
+        
+        if ($this->discount_percentage) {
+            return $basePrice - ($basePrice * ($this->discount_percentage / 100));
+        }
+        
+        if ($this->discount_amount) {
+            return max(0, $basePrice - $this->discount_amount);
+        }
+        
+        return $this->price;
+    }
+
+    public function getOriginalPriceAttribute($value)
+    {
+        return $value ?: $this->price;
+    }
+
+    public function getFinalPrice()
+    {
+        return $this->isDiscountActive() ? $this->getDiscountedPrice() : $this->price;
+    }
+
+    public function getDiscountPercentageValue()
+    {
+        if (!$this->isDiscountActive() || !$this->original_price) {
+            return 0;
+        }
+        
+        $originalPrice = $this->original_price;
+        $discountedPrice = $this->getDiscountedPrice();
+        
+        return round((($originalPrice - $discountedPrice) / $originalPrice) * 100, 2);
+    }
+
+    public function getSavingsAmount()
+    {
+        if (!$this->isDiscountActive()) {
+            return 0;
+        }
+        
+        $originalPrice = $this->original_price ?: $this->price;
+        return $originalPrice - $this->getDiscountedPrice();
+    }
+
+    // Scope for products with active discounts
+    public function scopeWithActiveDiscount($query)
+    {
+        return $query->where('has_discount', true)
+                    ->where(function($q) {
+                        $q->whereNull('discount_starts_at')
+                          ->orWhere('discount_starts_at', '<=', now());
+                    })
+                    ->where(function($q) {
+                        $q->whereNull('discount_ends_at')
+                          ->orWhere('discount_ends_at', '>=', now());
+                    });
     }
 
     public function getOgTitleAttribute($value)
@@ -127,9 +225,9 @@ class Product extends Model
         return $value ?: $this->meta_title;
     }
 
-    public function getOgDescriptionAttribute($value)
+    public function getMetaDescriptionAttribute($value)
     {
-        return $value ?: $this->meta_description;
+        return $value ?: Str::limit(strip_tags($this->description), 160);
     }
 
     public function getOgImageAttribute($value)

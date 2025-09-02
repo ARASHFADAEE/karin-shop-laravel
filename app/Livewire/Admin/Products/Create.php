@@ -32,6 +32,24 @@ class Create extends Component
     #[Rule('required|numeric|min:0')]
     public string $price = '';
 
+    #[Rule('nullable|numeric|min:0')]
+    public string $original_price = '';
+
+    #[Rule('nullable|numeric|min:0|max:100')]
+    public string $discount_percentage = '';
+
+    #[Rule('nullable|numeric|min:0')]
+    public string $discount_amount = '';
+
+    #[Rule('boolean')]
+    public bool $has_discount = false;
+
+    #[Rule('nullable|date')]
+    public string $discount_starts_at = '';
+
+    #[Rule('nullable|date')]
+    public string $discount_ends_at = '';
+
     #[Rule('required|integer|min:0')]
     public string $stock = '';
 
@@ -213,6 +231,12 @@ class Create extends Component
             'og_description' => $this->og_description,
             'og_image' => $this->og_image,
             'price' => $this->price,
+            'original_price' => $this->original_price ?: null,
+            'discount_percentage' => $this->discount_percentage ?: null,
+            'discount_amount' => $this->discount_amount ?: null,
+            'has_discount' => $this->has_discount,
+            'discount_starts_at' => $this->discount_starts_at ?: null,
+            'discount_ends_at' => $this->discount_ends_at ?: null,
             'stock' => $this->stock,
             'sku' => $this->sku,
             'status' => $this->status,

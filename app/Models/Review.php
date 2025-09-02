@@ -14,6 +14,13 @@ class Review extends Model
         'user_id',
         'rating',
         'comment',
+        'status',
+        'admin_reply',
+        'replied_at',
+    ];
+
+    protected $casts = [
+        'replied_at' => 'datetime',
     ];
 
     // Relationships
