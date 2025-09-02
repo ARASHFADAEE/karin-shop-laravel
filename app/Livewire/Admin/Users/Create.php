@@ -28,6 +28,31 @@ class Create extends Component
     #[Rule('required|in:admin,customer')]
     public string $role = 'customer';
 
+    public function generateRandomPassword()
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+        $password = '';
+        
+        // Ensure at least one of each type
+        $password .= chr(rand(97, 122)); // lowercase
+        $password .= chr(rand(65, 90));  // uppercase
+        $password .= chr(rand(48, 57));  // number
+        $password .= '!@#$%^&*'[rand(0, 7)]; // special char
+        
+        // Fill the rest randomly
+        for ($i = 4; $i < 12; $i++) {
+            $password .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        
+        // Shuffle the password
+        $password = str_shuffle($password);
+        
+        $this->password = $password;
+        $this->password_confirmation = $password;
+        
+        session()->flash('success', 'پسورد رندوم تولید شد: ' . $password);
+    }
+
     public function save()
     {
         $this->validate();

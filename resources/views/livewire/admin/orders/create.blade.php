@@ -14,17 +14,42 @@
         <div class="bg-white shadow rounded-lg p-6 mb-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">اطلاعات سفارش</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Customer Selection -->
+                <!-- Customer Search -->
                 <div>
-                    <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">مشتری *</label>
-                    <select wire:model="user_id" 
-                            id="user_id"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">انتخاب مشتری</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                        @endforeach
-                    </select>
+                    <label for="searchUser" class="block text-sm font-medium text-gray-700 mb-2">جستجوی مشتری *</label>
+                    <div class="relative">
+                        <input type="text" 
+                               wire:model.live="searchUser"
+                               id="searchUser"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="نام، ایمیل یا شماره تلفن مشتری را وارد کنید...">
+                        
+                        @if($selectedUserName)
+                            <div class="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg">
+                                <span class="text-green-800 text-sm">مشتری انتخاب شده: {{ $selectedUserName }}</span>
+                                <button type="button" wire:click="$set('user_id', '')" wire:click="$set('selectedUserName', '')" class="mr-2 text-red-600 hover:text-red-800">
+                                    <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        @endif
+                        
+                        @if(!empty($userSearchResults))
+                            <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                @foreach($userSearchResults as $user)
+                                    <div wire:click="selectUser({{ $user['id'] }}, '{{ $user['name'] }}')"
+                                         class="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                        <div class="font-medium text-gray-900">{{ $user['name'] }}</div>
+                                        <div class="text-sm text-gray-600">{{ $user['email'] }}</div>
+                                        @if($user['phone'])
+                                            <div class="text-sm text-gray-500">{{ $user['phone'] }}</div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
                     @error('user_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -47,6 +72,47 @@
                     @enderror
                 </div>
 
+                <!-- Payment Method -->
+                <div>
+                    <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-2">روش پرداخت *</label>
+                    <select wire:model="payment_method" 
+                            id="payment_method"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="cash">نقدی</option>
+                        <option value="card">کارت</option>
+                        <option value="online">آنلاین</option>
+                        <option value="bank_transfer">انتقال بانکی</option>
+                    </select>
+                    @error('payment_method')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- User Addresses -->
+                @if(!empty($userAddresses))
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">آدرس‌های ثبت شده</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            @foreach($userAddresses as $address)
+                                <div wire:click="selectAddress({{ $address['id'] }})"
+                                     class="p-4 border rounded-lg cursor-pointer transition-colors {{ $selected_address_id == $address['id'] ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400' }}">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium text-gray-900">{{ $address['title'] }}</span>
+                                        @if($address['is_default'])
+                                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">پیش‌فرض</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-sm text-gray-600">{{ $address['address'] }}</p>
+                                    <p class="text-sm text-gray-500">{{ $address['city'] }}, {{ $address['state'] }}</p>
+                                    @if($address['phone'])
+                                        <p class="text-sm text-gray-500">تلفن: {{ $address['phone'] }}</p>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Shipping Address -->
                 <div class="md:col-span-2">
                     <label for="shipping_address" class="block text-sm font-medium text-gray-700 mb-2">آدرس ارسال</label>
@@ -58,6 +124,7 @@
                     @error('shipping_address')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
+                    <p class="text-xs text-gray-500 mt-1">می‌توانید از آدرس‌های بالا انتخاب کنید یا آدرس جدید وارد کنید</p>
                 </div>
             </div>
         </div>

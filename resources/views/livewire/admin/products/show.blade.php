@@ -126,7 +126,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @foreach($product->featuredImages as $image)
                             <div class="relative">
-                                <img src="{{ $image->image_path }}" alt="Featured Image" class="w-full h-32 object-cover rounded-lg">
+                                <img src="{{ $image->image_url }}" alt="Featured Image" class="w-full h-32 object-cover rounded-lg">
                                 <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">شاخص</span>
                             </div>
                         @endforeach
@@ -139,7 +139,7 @@
                     <h4 class="text-md font-medium text-gray-700 mb-2">تصاویر عادی</h4>
                     <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
                         @foreach($product->images as $image)
-                            <img src="{{ $image->image_path }}" alt="Product Image" class="w-full h-24 object-cover rounded-lg">
+                            <img src="{{ $image->image_url }}" alt="Product Image" class="w-full h-24 object-cover rounded-lg">
                         @endforeach
                     </div>
                 </div>

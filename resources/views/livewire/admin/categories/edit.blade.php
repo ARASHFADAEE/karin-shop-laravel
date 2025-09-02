@@ -47,17 +47,27 @@
                     @enderror
                 </div>
 
-                <!-- Slug Preview -->
+                <!-- Slug Generation -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Slug (خودکار)</label>
-                    <div class="w-full border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 text-gray-600 font-mono text-sm">
-                        @if($name)
-                            {{ Str::slug($name) }}
-                        @else
-                            {{ $category->slug }}
-                        @endif
+                    <label class="block text-sm font-medium text-gray-700 mb-2">تولید اسلاگ</label>
+                    <div class="flex">
+                        <div class="flex-1 border border-gray-200 rounded-r-lg px-3 py-2 bg-gray-50 text-gray-600 font-mono text-sm">
+                            @if($name)
+                                {{ Str::slug($name) }}
+                            @else
+                                {{ $category->slug }}
+                            @endif
+                        </div>
+                        <button type="button" 
+                                wire:click="generateSlug"
+                                wire:loading.attr="disabled"
+                                wire:target="generateSlug"
+                                class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-l-lg border border-blue-600">
+                            <span wire:loading.remove wire:target="generateSlug">تولید اسلاگ</span>
+                            <span wire:loading wire:target="generateSlug">در حال تولید...</span>
+                        </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Slug به صورت خودکار از نام دسته‌بندی تولید می‌شود</p>
+                    <p class="text-xs text-gray-500 mt-1">اسلاگ از ترجمه انگلیسی نام دسته‌بندی تولید می‌شود</p>
                 </div>
 
                 <!-- Description -->

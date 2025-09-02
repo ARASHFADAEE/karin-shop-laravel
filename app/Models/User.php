@@ -73,4 +73,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Coupon::class, 'coupon_user')->withPivot('used_at');
     }
+
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
+    public function defaultAddress()
+    {
+        return $this->hasOne(UserAddress::class)->where('is_default', true);
+    }
 }

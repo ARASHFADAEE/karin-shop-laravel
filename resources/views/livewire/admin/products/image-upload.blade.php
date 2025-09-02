@@ -117,7 +117,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     @foreach($product->featuredImages as $image)
                         <div class="relative group">
-                            <img src="{{ $image->image_path }}" 
+                            <img src="{{ $image->image_url }}" 
                                  alt="{{ $image->alt_text }}" 
                                  class="w-full h-32 object-cover rounded-lg border-2 border-yellow-200">
                             <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
@@ -143,7 +143,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     @foreach($product->images as $image)
                         <div class="relative group">
-                            <img src="{{ $image->image_path }}" 
+                            <img src="{{ $image->image_url }}" 
                                  alt="{{ $image->alt_text }}" 
                                  class="w-full h-32 object-cover rounded-lg">
                             <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center space-x-2 space-x-reverse">

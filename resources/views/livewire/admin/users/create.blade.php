@@ -71,29 +71,42 @@
                 </div>
 
                 <!-- Password -->
-                <div>
+                <div class="md:col-span-2">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">رمز عبور *</label>
-                    <input type="password" 
-                           id="password"
-                           wire:model="password" 
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           placeholder="حداقل 8 کاراکتر">
-                    @error('password')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Password Confirmation -->
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">تکرار رمز عبور *</label>
-                    <input type="password" 
-                           id="password_confirmation"
-                           wire:model="password_confirmation" 
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           placeholder="رمز عبور را مجدداً وارد کنید">
-                    @error('password_confirmation')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex">
+                                <input type="password" 
+                                       id="password"
+                                       wire:model="password" 
+                                       class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                       placeholder="حداقل 8 کاراکتر">
+                                <button type="button" 
+                                        wire:click="generateRandomPassword"
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-l-lg border border-green-600 flex items-center">
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                    </svg>
+                                    تولید رندوم
+                                </button>
+                            </div>
+                            @error('password')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
+                        <div>
+                            <input type="password" 
+                                   id="password_confirmation"
+                                   wire:model="password_confirmation" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="تکرار رمز عبور">
+                            @error('password_confirmation')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">دکمه "تولید رندوم" یک پسورد امن 12 کاراکتری ایجاد می‌کند</p>
                 </div>
             </div>
 

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Categories;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
@@ -21,6 +22,8 @@ class Edit extends Component
     #[Rule('nullable|string')]
     public string $description = '';
 
+    public bool $isGeneratingSlug = false;
+
     public function mount(Category $category)
     {
         $this->category = $category;
@@ -31,10 +34,50 @@ class Edit extends Component
 
     public function generateSlug()
     {
-        if ($this->name) {
-            return Str::slug($this->name);
+        if (empty($this->name)) {
+            session()->flash('error', 'ابتدا نام دسته‌بندی را وارد کنید.');
+            return;
         }
-        return '';
+
+        $this->isGeneratingSlug = true;
+
+        try {
+            // Call translation API
+            $response = Http::withHeaders([
+                'one-api-token' => '645888:669bf7ffa1c57',
+                'Content-Type' => 'application/json',
+            ])->post('https://api.one-api.ir/translate/v1/google/', [
+                'source' => 'fa',
+                'target' => 'en',
+                'text' => $this->name
+            ]);
+
+            if ($response->successful() && $response->json('status') === 200) {
+                $translatedText = $response->json('result');
+                $slug = Str::slug($translatedText);
+            } else {
+                // Fallback to Persian slug
+                $slug = Str::slug($this->name);
+            }
+
+            // Ensure unique slug (except current category)
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Category::where('slug', $slug)->where('id', '!=', $this->category->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+
+            session()->flash('success', 'اسلاگ با موفقیت تولید شد: ' . $slug);
+            return $slug;
+        } catch (\Exception $e) {
+            // Fallback to Persian slug
+            $slug = Str::slug($this->name);
+            session()->flash('error', 'خطا در تولید اسلاگ. از نام فارسی استفاده شد.');
+            return $slug;
+        } finally {
+            $this->isGeneratingSlug = false;
+        }
     }
 
     public function save()

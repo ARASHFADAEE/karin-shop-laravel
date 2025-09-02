@@ -21,10 +21,22 @@ class Create extends Component
     #[Rule('required|in:pending,paid,shipped,completed,canceled')]
     public string $status = 'pending';
 
+    #[Rule('required|in:cash,card,online,bank_transfer')]
+    public string $payment_method = 'cash';
+
     public array $orderItems = [];
     public array $selectedProducts = [];
     public string $searchProduct = '';
     public array $searchResults = [];
+    
+    // User search
+    public string $searchUser = '';
+    public array $userSearchResults = [];
+    public string $selectedUserName = '';
+    
+    // User addresses
+    public array $userAddresses = [];
+    public string $selected_address_id = '';
 
     public function mount()
     {
@@ -45,6 +57,61 @@ class Create extends Component
                 ->toArray();
         } else {
             $this->searchResults = [];
+        }
+    }
+
+    public function updatedSearchUser()
+    {
+        if (strlen($this->searchUser) >= 2) {
+            $this->userSearchResults = User::where('role', 'customer')
+                ->where(function($query) {
+                    $query->where('name', 'like', '%' . $this->searchUser . '%')
+                          ->orWhere('email', 'like', '%' . $this->searchUser . '%')
+                          ->orWhere('phone', 'like', '%' . $this->searchUser . '%');
+                })
+                ->limit(10)
+                ->get()
+                ->toArray();
+        } else {
+            $this->userSearchResults = [];
+        }
+    }
+
+    public function selectUser($userId, $userName)
+    {
+        $this->user_id = $userId;
+        $this->selectedUserName = $userName;
+        $this->searchUser = '';
+        $this->userSearchResults = [];
+        
+        // Load user addresses
+        $this->loadUserAddresses();
+    }
+    
+    public function loadUserAddresses()
+    {
+        if ($this->user_id) {
+            $user = User::with('addresses')->find($this->user_id);
+            $this->userAddresses = $user ? $user->addresses->toArray() : [];
+            
+            // Set default address if exists
+            $defaultAddress = collect($this->userAddresses)->firstWhere('is_default', true);
+            if ($defaultAddress) {
+                $this->selected_address_id = $defaultAddress['id'];
+                $this->shipping_address = $defaultAddress['address'] . ', ' . $defaultAddress['city'] . ', ' . $defaultAddress['state'];
+            }
+        } else {
+            $this->userAddresses = [];
+            $this->selected_address_id = '';
+        }
+    }
+    
+    public function selectAddress($addressId)
+    {
+        $address = collect($this->userAddresses)->firstWhere('id', $addressId);
+        if ($address) {
+            $this->selected_address_id = $addressId;
+            $this->shipping_address = $address['address'] . ', ' . $address['city'] . ', ' . $address['state'];
         }
     }
 
@@ -119,6 +186,7 @@ class Create extends Component
             'total_amount' => $this->calculateTotal(),
             'status' => $this->status,
             'shipping_address' => $this->shipping_address,
+            'payment_method' => $this->payment_method,
         ]);
 
         // Create order items

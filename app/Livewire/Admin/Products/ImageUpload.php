@@ -49,8 +49,7 @@ class ImageUpload extends Component
                 
                 ProductImage::create([
                     'product_id' => $this->product->id,
-                    'image_path' => Storage::url($path),
-                    'alt_text' => $this->product->name,
+                    'image_url' => Storage::url($path),
                 ]);
             }
 
@@ -60,8 +59,7 @@ class ImageUpload extends Component
                 
                 ProductFeaturedImage::create([
                     'product_id' => $this->product->id,
-                    'image_path' => Storage::url($path),
-                    'alt_text' => $this->product->name . ' - تصویر شاخص',
+                    'image_url' => Storage::url($path),
                 ]);
             }
 
@@ -89,7 +87,7 @@ class ImageUpload extends Component
 
             if ($image) {
                 // Delete file from storage
-                $imagePath = str_replace('/storage/', '', $image->image_path);
+                $imagePath = str_replace('/storage/', '', $image->image_url);
                 Storage::disk('public')->delete($imagePath);
                 
                 // Delete from database
@@ -113,8 +111,7 @@ class ImageUpload extends Component
                 // Move to featured images
                 ProductFeaturedImage::create([
                     'product_id' => $this->product->id,
-                    'image_path' => $image->image_path,
-                    'alt_text' => $image->alt_text . ' - تصویر شاخص',
+                    'image_url' => $image->image_url,
                 ]);
                 
                 // Delete from regular images
