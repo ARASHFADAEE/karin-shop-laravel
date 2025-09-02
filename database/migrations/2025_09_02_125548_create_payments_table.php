@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->string('transaction_id', 100)->nullable();
             $table->decimal('amount', 12, 2);
             $table->string('payment_method', 50);
-            $table->string('status', 20)->default('pending'); // pending, success, failed
-            $table->string('transaction_id', 100)->nullable();
+            $table->string('status', 20)->default('pending'); // pending, completed, failed, refunded
+            $table->string('gateway', 50)->nullable(); // zarinpal, mellat, parsian, saderat
+            $table->string('gateway_transaction_id', 100)->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
             
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');

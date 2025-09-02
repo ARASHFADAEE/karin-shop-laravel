@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'category_id',
@@ -61,6 +62,11 @@ class Product extends Model
                 }
             }
         });
+        
+        static::deleting(function ($product) {
+            // حذف cart items مرتبط با این محصول
+            $product->cartItems()->delete();
+        });
     }
 
     // Relationships
@@ -92,15 +98,15 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+    
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 
     public function attributes()
     {
         return $this->hasMany(ProductAttribute::class);
-    }
-
-    public function cartItems()
-    {
-        return $this->hasMany(CartItem::class);
     }
 
     public function orderItems()

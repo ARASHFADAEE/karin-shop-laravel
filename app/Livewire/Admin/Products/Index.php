@@ -14,8 +14,22 @@ class Index extends Component
 
     public $search = '';
     public $category_id = '';
+    public $categoryFilter = '';
     public $status = '';
+    public $statusFilter = '';
     public $perPage = 10;
+    
+    public function updatedCategoryFilter()
+    {
+        $this->category_id = $this->categoryFilter;
+        $this->resetPage();
+    }
+    
+    public function updatedStatusFilter()
+    {
+        $this->status = $this->statusFilter;
+        $this->resetPage();
+    }
 
     protected $queryString = ['search', 'category_id', 'status'];
 
@@ -34,7 +48,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function deleteProduct($productId)
+    public function delete($productId)
     {
         $product = Product::find($productId);
         if ($product) {
@@ -52,6 +66,11 @@ class Index extends Component
             $product->delete();
             session()->flash('success', 'محصول با موفقیت حذف شد.');
         }
+    }
+    
+    public function deleteProduct($productId)
+    {
+        return $this->delete($productId);
     }
 
     #[Layout('layouts.admin')]

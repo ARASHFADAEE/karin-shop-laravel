@@ -438,9 +438,23 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
 
-                @if ($images)
+                @if($images)
                     <div class="mt-3">
-                        <p class="text-sm text-gray-600">{{ count($images) }} فایل انتخاب شده</p>
+                        <p class="text-sm text-gray-600 mb-2">{{ count($images) }} فایل انتخاب شده</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            @foreach($images as $index => $image)
+                                <div class="relative">
+                                    <img src="{{ $image->temporaryUrl() }}" 
+                                         alt="Preview" 
+                                         class="w-full h-20 object-cover rounded border">
+                                    <button type="button" 
+                                            wire:click="removeImage({{ $index }})" 
+                                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                        ×
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 @endif
             </div>
@@ -468,9 +482,24 @@
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
 
-                @if ($featuredImages)
+                @if($featuredImages)
                     <div class="mt-3">
-                        <p class="text-sm text-gray-600">{{ count($featuredImages) }} فایل انتخاب شده</p>
+                        <p class="text-sm text-gray-600 mb-2">{{ count($featuredImages) }} فایل انتخاب شده</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            @foreach($featuredImages as $index => $image)
+                                <div class="relative">
+                                    <img src="{{ $image->temporaryUrl() }}" 
+                                         alt="Featured Preview" 
+                                         class="w-full h-20 object-cover rounded border-2 border-yellow-300">
+                                    <button type="button" 
+                                            wire:click="removeFeaturedImage({{ $index }})" 
+                                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                        ×
+                                    </button>
+                                    <span class="absolute top-1 right-1 bg-yellow-500 text-white text-xs px-1 rounded">شاخص</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 @endif
             </div>

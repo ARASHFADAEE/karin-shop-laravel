@@ -127,7 +127,7 @@ class Edit extends Component
         
         // Attributes
         $this->productAttributes = $product->attributes->map(function($attr) {
-            return ['name' => $attr->name, 'value' => $attr->value];
+            return ['name' => $attr->attribute_name, 'value' => $attr->attribute_value];
         })->toArray();
         
         if (empty($this->productAttributes)) {
@@ -277,8 +277,8 @@ class Edit extends Component
             if (!empty($attribute['name']) && !empty($attribute['value'])) {
                 ProductAttribute::create([
                     'product_id' => $this->product->id,
-                    'name' => $attribute['name'],
-                    'value' => $attribute['value'],
+                    'attribute_name' => $attribute['name'],
+                    'attribute_value' => $attribute['value'],
                 ]);
             }
         }
@@ -384,6 +384,8 @@ class Edit extends Component
     public function render()
     {
         $categories = Category::all();
+        // Refresh product with images to ensure they are loaded
+        $this->product->load(['images', 'featuredImages']);
         return view('livewire.admin.products.edit', compact('categories'));
     }
 }

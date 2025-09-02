@@ -163,6 +163,18 @@ class Create extends Component
         }
     }
 
+    public function removeImage($index)
+    {
+        unset($this->images[$index]);
+        $this->images = array_values($this->images);
+    }
+
+    public function removeFeaturedImage($index)
+    {
+        unset($this->featuredImages[$index]);
+        $this->featuredImages = array_values($this->featuredImages);
+    }
+
     public function updatedImages()
     {
         $this->validate([
@@ -254,8 +266,8 @@ class Create extends Component
             if (!empty($attribute['name']) && !empty($attribute['value'])) {
                 ProductAttribute::create([
                     'product_id' => $product->id,
-                    'name' => $attribute['name'],
-                    'value' => $attribute['value'],
+                    'attribute_name' => $attribute['name'],
+                    'attribute_value' => $attribute['value'],
                 ]);
             }
         }

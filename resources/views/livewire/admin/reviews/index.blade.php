@@ -48,7 +48,7 @@
     <!-- Reviews List -->
     <div class="bg-white shadow rounded-lg">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">لیست نظرات ({{ $reviews->total() }})</h3>
+            <h3 class="text-lg font-medium text-gray-900">لیست نظرات ({{ $reviews ? $reviews->total() : 0 }})</h3>
         </div>
         
         <div class="divide-y divide-gray-200">
@@ -204,7 +204,7 @@
             @endforelse
         </div>
         
-        @if($reviews->hasPages())
+        @if($reviews && $reviews->hasPages())
             <div class="px-6 py-4 border-t border-gray-200">
                 {{ $reviews->links() }}
             </div>
@@ -212,23 +212,23 @@
     </div>
 
     <!-- Statistics -->
-    @if($reviews->count() > 0)
+    @if($reviews && $reviews->count() > 0)
         <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-white p-4 rounded-lg shadow">
                 <div class="text-sm font-medium text-gray-500">کل نظرات</div>
-                <div class="text-2xl font-bold text-gray-900">{{ $reviews->total() }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $reviews ? $reviews->total() : 0 }}</div>
             </div>
             <div class="bg-white p-4 rounded-lg shadow">
                 <div class="text-sm font-medium text-gray-500">تایید شده</div>
-                <div class="text-2xl font-bold text-green-600">{{ $reviews->where('status', 'approved')->count() }}</div>
+                <div class="text-2xl font-bold text-green-600">{{ $reviews ? $reviews->where('status', 'approved')->count() : 0 }}</div>
             </div>
             <div class="bg-white p-4 rounded-lg shadow">
                 <div class="text-sm font-medium text-gray-500">در انتظار</div>
-                <div class="text-2xl font-bold text-yellow-600">{{ $reviews->where('status', 'pending')->count() }}</div>
+                <div class="text-2xl font-bold text-yellow-600">{{ $reviews ? $reviews->where('status', 'pending')->count() : 0 }}</div>
             </div>
             <div class="bg-white p-4 rounded-lg shadow">
                 <div class="text-sm font-medium text-gray-500">رد شده</div>
-                <div class="text-2xl font-bold text-red-600">{{ $reviews->where('status', 'rejected')->count() }}</div>
+                <div class="text-2xl font-bold text-red-600">{{ $reviews ? $reviews->where('status', 'rejected')->count() : 0 }}</div>
             </div>
         </div>
     @endif

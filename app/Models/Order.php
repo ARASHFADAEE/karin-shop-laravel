@@ -11,14 +11,24 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'order_number',
         'status',
         'total_amount',
-        'shipping_address',
+        'discount_amount',
+        'shipping_amount',
+        'tax_amount',
+        'payment_status',
         'payment_method',
+        'shipping_address',
+        'billing_address',
+        'notes',
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'shipping_amount' => 'decimal:2',
+        'tax_amount' => 'decimal:2',
     ];
 
     // Relationships

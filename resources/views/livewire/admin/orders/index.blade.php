@@ -25,10 +25,10 @@
                 <select wire:model.live="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">همه وضعیت‌ها</option>
                     <option value="pending">در انتظار</option>
-                    <option value="paid">پرداخت شده</option>
+                    <option value="processing">در حال پردازش</option>
                     <option value="shipped">ارسال شده</option>
-                    <option value="completed">تکمیل شده</option>
-                    <option value="canceled">لغو شده</option>
+                    <option value="delivered">تحویل داده شده</option>
+                    <option value="cancelled">لغو شده</option>
                 </select>
             </div>
             <div>
@@ -59,7 +59,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($orders as $order)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ $order->id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $order->order_number ?? '#'.$order->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">{{ $order->user->name }}</div>
                                 <div class="text-sm text-gray-500">{{ $order->user->email }}</div>
@@ -68,17 +68,17 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <select wire:change="updateOrderStatus({{ $order->id }}, $event.target.value)" 
                                         class="text-xs font-semibold rounded-full px-2 py-1 border-0
-                                        @if($order->status === 'completed') bg-green-100 text-green-800
+                                        @if($order->status === 'delivered') bg-green-100 text-green-800
                                         @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
                                         @elseif($order->status === 'shipped') bg-blue-100 text-blue-800
-                                        @elseif($order->status === 'paid') bg-indigo-100 text-indigo-800
+                                        @elseif($order->status === 'processing') bg-indigo-100 text-indigo-800
                                         @else bg-red-100 text-red-800
                                         @endif">
                                     <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>در انتظار</option>
-                                    <option value="paid" {{ $order->status === 'paid' ? 'selected' : '' }}>پرداخت شده</option>
+                                    <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>در حال پردازش</option>
                                     <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>ارسال شده</option>
-                                    <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>تکمیل شده</option>
-                                    <option value="canceled" {{ $order->status === 'canceled' ? 'selected' : '' }}>لغو شده</option>
+                                    <option value="delivered" {{ $order->status === 'delivered' ? 'selected' : '' }}>تحویل داده شده</option>
+                                     <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>لغو شده</option>
                                 </select>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order->created_at->format('Y/m/d H:i') }}</td>

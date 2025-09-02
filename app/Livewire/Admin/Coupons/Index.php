@@ -13,7 +13,22 @@ class Index extends Component
 
     public string $search = '';
     public string $status = '';
+    public string $statusFilter = '';
+    public string $type = '';
+    public string $typeFilter = '';
     public int $perPage = 10;
+    
+    public function updatedStatusFilter()
+    {
+        $this->status = $this->statusFilter;
+        $this->resetPage();
+    }
+    
+    public function updatedTypeFilter()
+    {
+        $this->type = $this->typeFilter;
+        $this->resetPage();
+    }
 
     public function updatingSearch()
     {
@@ -56,6 +71,9 @@ class Index extends Component
             })
             ->when($this->status !== '', function ($query) {
                 $query->where('is_active', $this->status === 'active');
+            })
+            ->when($this->type !== '', function ($query) {
+                $query->where('type', $this->type);
             })
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);

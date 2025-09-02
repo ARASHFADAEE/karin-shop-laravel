@@ -11,6 +11,21 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        <testsuite name="ProductManagement">
+            <file>tests/Feature/ProductManagementTest.php</file>
+        </testsuite>
+        <testsuite name="CategoryManagement">
+            <file>tests/Feature/CategoryManagementTest.php</file>
+        </testsuite>
+        <testsuite name="CouponManagement">
+            <file>tests/Feature/CouponManagementTest.php</file>
+        </testsuite>
+        <testsuite name="ReviewManagement">
+            <file>tests/Feature/ReviewManagementTest.php</file>
+        </testsuite>
+        <testsuite name="SystemOperations">
+            <file>tests/Feature/SystemOperationsTest.php</file>
+        </testsuite>
     </testsuites>
     <source>
         <include>

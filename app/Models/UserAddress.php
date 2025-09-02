@@ -12,17 +12,41 @@ class UserAddress extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'first_name',
+        'last_name',
+        'phone',
         'address',
         'city',
         'state',
         'postal_code',
-        'phone',
         'is_default',
     ];
 
     protected $casts = [
         'is_default' => 'boolean',
     ];
+    
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($address) {
+            if ($address->is_default) {
+                // Remove default from other addresses of the same user
+                static::where('user_id', $address->user_id)
+                      ->update(['is_default' => false]);
+            }
+        });
+        
+        static::updating(function ($address) {
+            if ($address->is_default && $address->isDirty('is_default')) {
+                // Remove default from other addresses of the same user
+                static::where('user_id', $address->user_id)
+                      ->where('id', '!=', $address->id)
+                      ->update(['is_default' => false]);
+            }
+        });
+    }
 
     // Relationships
     public function user()

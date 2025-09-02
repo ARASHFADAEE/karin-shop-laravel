@@ -40,7 +40,11 @@ class Login extends Component
 
         if (Auth::attempt($credentials, $this->remember)) {
             RateLimiter::clear($key);
-            request()->session()->regenerate();
+            
+            // تنظیم session فقط در صورت وجود
+            if (request()->hasSession()) {
+                request()->session()->regenerate();
+            }
             
             return $this->redirect(route('admin.dashboard'), navigate: true);
         }

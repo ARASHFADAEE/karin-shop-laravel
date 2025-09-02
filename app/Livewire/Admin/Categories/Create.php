@@ -13,6 +13,9 @@ class Create extends Component
 {
     #[Rule('required|string|max:100')]
     public string $name = '';
+    
+    #[Rule('required|string|max:150|unique:categories,slug')]
+    public string $slug = '';
 
     #[Rule('nullable|exists:categories,id')]
     public string $parent_id = '';
@@ -58,11 +61,13 @@ class Create extends Component
                 $counter++;
             }
 
+            $this->slug = $slug;
             session()->flash('success', 'اسلاگ با موفقیت تولید شد: ' . $slug);
             return $slug;
         } catch (\Exception $e) {
             // Fallback to Persian slug
             $slug = Str::slug($this->name);
+            $this->slug = $slug;
             session()->flash('error', 'خطا در تولید اسلاگ. از نام فارسی استفاده شد.');
             return $slug;
         } finally {
@@ -72,22 +77,17 @@ class Create extends Component
 
     public function save()
     {
-        $this->validate();
-
-        $slug = $this->generateSlug();
-        
-        // بررسی یکتا بودن slug
-        $originalSlug = $slug;
-        $counter = 1;
-        while (Category::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
+        // اگر slug خالی است، آن را تولید کن
+        if (empty($this->slug)) {
+            $this->generateSlug();
         }
+        
+        $this->validate();
 
         Category::create([
             'name' => $this->name,
             'parent_id' => $this->parent_id ?: null,
-            'slug' => $slug,
+            'slug' => $this->slug,
             'description' => $this->description,
         ]);
 

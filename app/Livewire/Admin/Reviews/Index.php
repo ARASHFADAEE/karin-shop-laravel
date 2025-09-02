@@ -70,6 +70,42 @@ class Index extends Component
         }
     }
 
+    public function replyToReview($reviewId, $reply)
+    {
+        if (!empty($reply)) {
+            $review = Review::find($reviewId);
+            if ($review) {
+                $review->update([
+                    'admin_reply' => $reply,
+                    'replied_at' => now()
+                ]);
+                session()->flash('success', 'پاسخ ثبت شد.');
+            }
+        }
+    }
+    
+    public function getReviewsProperty()
+    {
+        return Review::with(['user', 'product'])
+            ->when($this->search, function ($query) {
+                $query->where('comment', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('user', function($q) {
+                          $q->where('name', 'like', '%' . $this->search . '%');
+                      })
+                      ->orWhereHas('product', function($q) {
+                          $q->where('name', 'like', '%' . $this->search . '%');
+                      });
+            })
+            ->when($this->status !== '', function ($query) {
+                $query->where('status', $this->status);
+            })
+            ->when($this->rating !== '', function ($query) {
+                $query->where('rating', $this->rating);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate($this->perPage);
+    }
+
     #[Layout('layouts.admin')]
     public function render()
     {

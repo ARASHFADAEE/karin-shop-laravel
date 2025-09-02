@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('title', 100); // خانه، دفتر، انبار و غیره
+            $table->string('first_name', 100);
+            $table->string('last_name', 100);
+            $table->string('phone', 20);
             $table->text('address');
             $table->string('city', 100);
             $table->string('state', 100);
             $table->string('postal_code', 20)->nullable();
-            $table->string('phone', 20)->nullable();
             $table->boolean('is_default')->default(false);
             $table->timestamps();
             

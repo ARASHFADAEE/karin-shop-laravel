@@ -21,11 +21,11 @@ class Edit extends Component
     #[Rule('nullable|string')]
     public string $shipping_address = '';
 
-    #[Rule('required|in:pending,paid,shipped,completed,canceled')]
+    #[Rule('required|in:pending,processing,shipped,delivered,cancelled')]
     public string $status = 'pending';
 
-    #[Rule('required|in:cash,card,online,bank_transfer')]
-    public string $payment_method = 'cash';
+    #[Rule('required|in:credit_card,bank_transfer,cash_on_delivery')]
+    public string $payment_method = 'cash_on_delivery';
 
     public array $orderItems = [];
     public array $selectedProducts = [];
@@ -62,6 +62,17 @@ class Edit extends Component
                 'price' => $item->price,
             ];
         })->toArray();
+        
+        // اگر order items خالی است، یک item خالی اضافه کن
+        if (empty($this->orderItems)) {
+            $this->orderItems = [[
+                'id' => null,
+                'product_id' => '',
+                'product_name' => '',
+                'quantity' => 1,
+                'price' => 0,
+            ]];
+        }
         
         // Load selected products
         foreach ($this->orderItems as $item) {
@@ -194,8 +205,9 @@ class Edit extends Component
     {
         $this->validate();
 
-        // Validate order items
-        if (empty($this->orderItems) || empty(array_filter($this->orderItems, fn($item) => !empty($item['product_id'])))) {
+        // Validate order items only if there are actual products
+        $validItems = array_filter($this->orderItems, fn($item) => !empty($item['product_id']));
+        if (empty($validItems) && !empty(array_filter($this->orderItems, fn($item) => !empty($item['product_name'])))) {
             session()->flash('error', 'حداقل یک محصول باید انتخاب شود.');
             return;
         }
@@ -209,19 +221,21 @@ class Edit extends Component
             'payment_method' => $this->payment_method,
         ]);
 
-        // Update order items
-        // First, delete existing items
-        $this->order->orderItems()->delete();
-        
-        // Then create new items
-        foreach ($this->orderItems as $item) {
-            if (!empty($item['product_id'])) {
-                OrderItem::create([
-                    'order_id' => $this->order->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                ]);
+        // Update order items only if there are valid items
+        if (!empty($validItems)) {
+            // First, delete existing items
+            $this->order->orderItems()->delete();
+            
+            // Then create new items
+            foreach ($this->orderItems as $item) {
+                if (!empty($item['product_id'])) {
+                    OrderItem::create([
+                        'order_id' => $this->order->id,
+                        'product_id' => $item['product_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                    ]);
+                }
             }
         }
 

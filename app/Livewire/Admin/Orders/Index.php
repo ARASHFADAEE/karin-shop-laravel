@@ -13,7 +13,14 @@ class Index extends Component
 
     public $search = '';
     public $status = '';
+    public $statusFilter = '';
     public $perPage = 10;
+    
+    public function updatedStatusFilter()
+    {
+        $this->status = $this->statusFilter;
+        $this->resetPage();
+    }
 
     protected $queryString = ['search', 'status'];
 
