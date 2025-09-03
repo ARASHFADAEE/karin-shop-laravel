@@ -102,6 +102,41 @@ class Settings extends Component
     
     #[Rule('required|string|max:50')]
     public string $invoice_watermark_text = 'کارین شاپ';
+    
+    // Melli Payamak SMS Settings
+    #[Rule('nullable|string|max:100')]
+    public string $melli_payamak_username = '';
+    
+    #[Rule('nullable|string|max:100')]
+    public string $melli_payamak_password = '';
+    
+    #[Rule('nullable|string|max:20')]
+    public string $melli_payamak_sender_number = '';
+    
+    // SMS Pattern Settings
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_login_code = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_order_created = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_order_processing = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_order_shipped = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_order_delivered = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_order_cancelled = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_admin_new_order = '';
+    
+    #[Rule('nullable|string|max:255')]
+    public string $sms_pattern_admin_low_stock = '';
 
     #[Rule('required|numeric|min:0')]
     public string $free_shipping_threshold = '0';
@@ -156,6 +191,21 @@ class Settings extends Component
         $this->invoice_terms = $setting->invoice_terms ?? '';
         $this->invoice_show_watermark = $setting->invoice_show_watermark ?? true;
         $this->invoice_watermark_text = $setting->invoice_watermark_text ?? 'کارین شاپ';
+        
+        // Melli Payamak SMS Settings
+        $this->melli_payamak_username = $setting->melli_payamak_username ?? '';
+        $this->melli_payamak_password = $setting->melli_payamak_password ?? '';
+        $this->melli_payamak_sender_number = $setting->melli_payamak_sender_number ?? '';
+        
+        // SMS Pattern Settings
+        $this->sms_pattern_login_code = $setting->sms_pattern_login_code ?? '';
+        $this->sms_pattern_order_created = $setting->sms_pattern_order_created ?? '';
+        $this->sms_pattern_order_processing = $setting->sms_pattern_order_processing ?? '';
+        $this->sms_pattern_order_shipped = $setting->sms_pattern_order_shipped ?? '';
+        $this->sms_pattern_order_delivered = $setting->sms_pattern_order_delivered ?? '';
+        $this->sms_pattern_order_cancelled = $setting->sms_pattern_order_cancelled ?? '';
+        $this->sms_pattern_admin_new_order = $setting->sms_pattern_admin_new_order ?? '';
+        $this->sms_pattern_admin_low_stock = $setting->sms_pattern_admin_low_stock ?? '';
     }
 
     public function save()
@@ -196,6 +246,21 @@ class Settings extends Component
             'invoice_terms' => $this->invoice_terms,
             'invoice_show_watermark' => $this->invoice_show_watermark,
             'invoice_watermark_text' => $this->invoice_watermark_text,
+            
+            // Melli Payamak SMS Settings
+            'melli_payamak_username' => $this->melli_payamak_username,
+            'melli_payamak_password' => $this->melli_payamak_password,
+            'melli_payamak_sender_number' => $this->melli_payamak_sender_number,
+            
+            // SMS Pattern Settings
+            'sms_pattern_login_code' => $this->sms_pattern_login_code,
+            'sms_pattern_order_created' => $this->sms_pattern_order_created,
+            'sms_pattern_order_processing' => $this->sms_pattern_order_processing,
+            'sms_pattern_order_shipped' => $this->sms_pattern_order_shipped,
+            'sms_pattern_order_delivered' => $this->sms_pattern_order_delivered,
+            'sms_pattern_order_cancelled' => $this->sms_pattern_order_cancelled,
+            'sms_pattern_admin_new_order' => $this->sms_pattern_admin_new_order,
+            'sms_pattern_admin_low_stock' => $this->sms_pattern_admin_low_stock,
         ];
 
         // Save to database

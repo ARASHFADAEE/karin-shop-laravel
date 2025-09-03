@@ -25,6 +25,21 @@ class Setting extends Model
         'sms_api_key',
         'sms_sender_number',
         
+        // Melli Payamak SMS Settings
+        'melli_payamak_username',
+        'melli_payamak_password',
+        'melli_payamak_sender_number',
+        
+        // SMS Pattern Settings
+        'sms_pattern_login_code',
+        'sms_pattern_order_created',
+        'sms_pattern_order_processing',
+        'sms_pattern_order_shipped',
+        'sms_pattern_order_delivered',
+        'sms_pattern_order_cancelled',
+        'sms_pattern_admin_new_order',
+        'sms_pattern_admin_low_stock',
+        
         // Email Settings
         'smtp_host',
         'smtp_port',

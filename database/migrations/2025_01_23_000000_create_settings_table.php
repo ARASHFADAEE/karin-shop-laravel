@@ -29,6 +29,21 @@ return new class extends Migration
             $table->string('sms_api_key')->nullable();
             $table->string('sms_sender_number')->nullable();
             
+            // Melli Payamak SMS Settings
+            $table->string('melli_payamak_username')->nullable();
+            $table->string('melli_payamak_password')->nullable();
+            $table->string('melli_payamak_sender_number')->nullable();
+            
+            // SMS Pattern Settings
+            $table->string('sms_pattern_login_code')->nullable();
+            $table->string('sms_pattern_order_created')->nullable();
+            $table->string('sms_pattern_order_processing')->nullable();
+            $table->string('sms_pattern_order_shipped')->nullable();
+            $table->string('sms_pattern_order_delivered')->nullable();
+            $table->string('sms_pattern_order_cancelled')->nullable();
+            $table->string('sms_pattern_admin_new_order')->nullable();
+            $table->string('sms_pattern_admin_low_stock')->nullable();
+            
             // Email Settings
             $table->string('smtp_host')->nullable();
             $table->string('smtp_port')->nullable();

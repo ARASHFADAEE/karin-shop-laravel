@@ -11,597 +11,490 @@
     </div>
 
     <form wire:submit="save">
-        <!-- Basic Information -->
+        <!-- Tab Navigation -->
         <div class="bg-white shadow rounded-lg mb-6">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">اطلاعات اصلی محصول</h3>
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8 space-x-reverse px-6">
+                    <button type="button" wire:click="setActiveTab('basic')"
+                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'basic' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        اطلاعات اصلی
+                    </button>
+                    <button type="button" wire:click="setActiveTab('variants')"
+                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'variants' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        انواع محصول
+                    </button>
+                    <button type="button" wire:click="setActiveTab('filters')"
+                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'filters' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        فیلترها
+                    </button>
+                    <button type="button" wire:click="setActiveTab('images')"
+                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'images' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        تصاویر
+                    </button>
+                    <button type="button" wire:click="setActiveTab('seo')"
+                        class="py-4 px-1 border-b-2 font-medium text-sm {{ $activeTab === 'seo' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        سئو
+                    </button>
+                </nav>
             </div>
 
+            <!-- Tab Content -->
             <div class="p-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Name -->
-                    <div class="lg:col-span-2">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">نام محصول *</label>
-                        <input type="text" id="name" wire:model="name"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="نام محصول را وارد کنید">
-                        @error('name')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Slug -->
-                    <div class="lg:col-span-2">
-                        <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">اسلاگ (URL)</label>
-                        <div class="flex">
-                            <input type="text" id="slug" wire:model="slug"
-                                class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="اسلاگ محصول">
-                            <button type="button" wire:click="generateSlug" wire:loading.attr="disabled"
-                                wire:target="generateSlug"
-                                class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-l-lg border border-blue-600">
-                                <span wire:loading.remove wire:target="generateSlug">تولید اسلاگ</span>
-                                <span wire:loading wire:target="generateSlug">در حال تولید...</span>
-                            </button>
-                        </div>
-                        @error('slug')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                        <p class="text-xs text-gray-500 mt-1">اسلاگ از ترجمه انگلیسی نام محصول تولید می‌شود</p>
-                    </div>
-
-                    <!-- Categories (Multi-select with Search) -->
-                    <div class="lg:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">دسته‌بندی‌ها *</label>
-
-                        <!-- Category Search and Selection -->
-                        <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
-                            <!-- Search Input -->
-                            <div class="mb-3">
-                                <input type="text" wire:model.live="categorySearch"
+                <!-- Basic Information Tab -->
+                @if($activeTab === 'basic')
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Name -->
+                            <div class="lg:col-span-2">
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">نام محصول *</label>
+                                <input type="text" id="name" wire:model="name"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="جستجو در دسته‌بندی‌ها...">
+                                    placeholder="نام محصول را وارد کنید">
+                                @error('name')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Categories List (Scrollable) -->
-                            <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-lg bg-white">
-                                @php
-                                    $filteredCategories = $categories;
-                                    if (!empty($categorySearch)) {
-                                        $filteredCategories = $categories->filter(function ($category) {
-                                            return str_contains(
-                                                strtolower($category->name),
-                                                strtolower($this->categorySearch ?? ''),
-                                            );
-                                        });
-                                    }
-                                @endphp
+                            <!-- Slug -->
+                            <div class="lg:col-span-2">
+                                <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">اسلاگ (URL)</label>
+                                <div class="flex">
+                                    <input type="text" id="slug" wire:model="slug"
+                                        class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="اسلاگ محصول">
+                                    <button type="button" wire:click="generateSlug" wire:loading.attr="disabled"
+                                        wire:target="generateSlug"
+                                        class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-l-lg border border-blue-600">
+                                        <span wire:loading.remove wire:target="generateSlug">تولید اسلاگ</span>
+                                        <span wire:loading wire:target="generateSlug">در حال تولید...</span>
+                                    </button>
+                                </div>
+                                @error('slug')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                                @if ($filteredCategories->count() > 0)
-                                    @foreach ($filteredCategories as $category)
-                                        <label
-                                            class="flex items-center p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 cursor-pointer">
-                                            <input type="checkbox" wire:model="selectedCategories"
-                                                value="{{ $category->id }}"
-                                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                            <span class="mr-3 text-sm text-gray-700">{{ $category->name }}</span>
-                                            @if ($category->parent_id)
-                                                <span class="text-xs text-gray-500 mr-auto">زیرمجموعه</span>
-                                            @endif
-                                        </label>
-                                    @endforeach
+                            <!-- Description -->
+                            <div class="lg:col-span-2">
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات</label>
+                                <textarea id="description" wire:model="description" rows="4"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="توضیحات محصول را وارد کنید"></textarea>
+                                @error('description')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Price -->
+                            <div>
+                                <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان) *</label>
+                                <input type="number" id="price" wire:model="price"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="قیمت محصول">
+                                @error('price')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Original Price -->
+                            <div>
+                                <label for="original_price" class="block text-sm font-medium text-gray-700 mb-2">قیمت اصلی (تومان)</label>
+                                <input type="number" id="original_price" wire:model="original_price"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="قیمت اصلی محصول">
+                                @error('original_price')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Stock -->
+                            <div>
+                                <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">موجودی *</label>
+                                <input type="number" id="stock" wire:model="stock"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="تعداد موجودی">
+                                @error('stock')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- SKU -->
+                            <div>
+                                <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">کد محصول (SKU) *</label>
+                                <div class="flex">
+                                    <input type="text" id="sku" wire:model="sku"
+                                        class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="کد محصول">
+                                    <button type="button" wire:click="generateSku"
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-l-lg border border-green-600">
+                                        تولید کد
+                                    </button>
+                                </div>
+                                @error('sku')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Status -->
+                            <div>
+                                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">وضعیت *</label>
+                                <select id="status" wire:model="status"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="active">فعال</option>
+                                    <option value="draft">پیش‌نویس</option>
+                                    <option value="out_of_stock">ناموجود</option>
+                                </select>
+                                @error('status')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Categories -->
+                            <div class="lg:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">دسته‌بندی‌ها *</label>
+                                
+                                <div wire:listen="categoriesUpdated">
+                                    <livewire:category-selector 
+                                        :selected-categories="$selectedCategories"
+                                        :primary-category="$primaryCategory"
+                                        :allow-multiple="true"
+                                        :show-hierarchy="true"
+                                        :max-height="350"
+                                        placeholder="جستجو در دسته‌بندی‌ها..." />
+                                </div>
+                                
+                                @error('selectedCategories')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Variants Tab -->
+                @if($activeTab === 'variants')
+                    <div class="space-y-6">
+                        <!-- Variant Type Selection -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-3">نوع محصول</h4>
+                            <div class="flex items-center space-x-6 space-x-reverse">
+                                <label class="flex items-center">
+                                    <input type="radio" wire:model="hasVariants" value="false" class="text-blue-600 focus:ring-blue-500">
+                                    <span class="mr-2">محصول ساده</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" wire:model="hasVariants" value="true" class="text-blue-600 focus:ring-blue-500">
+                                    <span class="mr-2">محصول با انواع مختلف</span>
+                                </label>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                محصول ساده: یک نوع با یک قیمت و موجودی<br>
+                                محصول با انواع: چندین نوع با رنگ، سایز و قیمت‌های مختلف
+                            </p>
+                        </div>
+
+                        @if($hasVariants)
+                            <!-- Variant Generation -->
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-medium text-gray-900 mb-3">تولید خودکار انواع</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Colors -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">رنگ‌ها</label>
+                                        <div class="space-y-2 max-h-32 overflow-y-auto">
+                                            @foreach(['سفید', 'مشکی', 'قرمز', 'آبی', 'سبز', 'زرد', 'نارنجی', 'بنفش', 'صورتی', 'خاکستری'] as $color)
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" wire:model="selectedColors" value="{{ $color }}" class="text-blue-600 focus:ring-blue-500">
+                                                    <span class="mr-2 text-sm">{{ $color }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <!-- Sizes -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">سایزها</label>
+                                        <div class="space-y-2 max-h-32 overflow-y-auto">
+                                            @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45'] as $size)
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" wire:model="selectedSizes" value="{{ $size }}" class="text-blue-600 focus:ring-blue-500">
+                                                    <span class="mr-2 text-sm">{{ $size }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" wire:click="generateVariantsFromCombinations" 
+                                    class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                    تولید انواع از ترکیب رنگ و سایز
+                                </button>
+                            </div>
+
+                            <!-- Variants List -->
+                            <div>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-medium text-gray-900">لیست انواع محصول</h4>
+                                    <button type="button" wire:click="addVariant" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                                        افزودن نوع جدید
+                                    </button>
+                                </div>
+
+                                @if(!empty($productVariants))
+                                    <div class="space-y-4">
+                                        @foreach($productVariants as $index => $variant)
+                                            <div class="border border-gray-200 rounded-lg p-4">
+                                                <div class="flex justify-between items-start mb-4">
+                                                    <h5 class="font-medium text-gray-900">نوع {{ $index + 1 }}</h5>
+                                                    <button type="button" wire:click="removeVariant({{ $index }})" 
+                                                        class="text-red-600 hover:text-red-800">
+                                                        حذف
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">نام</label>
+                                                        <input type="text" wire:model="productVariants.{{ $index }}.name" 
+                                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm" 
+                                                            placeholder="نام نوع">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">رنگ</label>
+                                                        <input type="text" wire:model="productVariants.{{ $index }}.color" 
+                                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm" 
+                                                            placeholder="رنگ">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">سایز</label>
+                                                        <input type="text" wire:model="productVariants.{{ $index }}.size" 
+                                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm" 
+                                                            placeholder="سایز">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">قیمت</label>
+                                                        <input type="number" wire:model="productVariants.{{ $index }}.price" 
+                                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm" 
+                                                            placeholder="قیمت">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">موجودی</label>
+                                                        <input type="number" wire:model="productVariants.{{ $index }}.stock" 
+                                                            class="w-full border border-gray-300 rounded px-3 py-2 text-sm" 
+                                                            placeholder="موجودی">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="mt-3 text-sm text-gray-600">
+                                                    <strong>SKU:</strong> {{ $variant['sku'] ?? 'خودکار تولید می‌شود' }}
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 @else
-                                    <div class="p-4 text-center text-gray-500 text-sm">
-                                        دسته‌بندی‌ای یافت نشد
+                                    <div class="text-center py-8 text-gray-500">
+                                        هنوز هیچ نوعی اضافه نشده است
                                     </div>
                                 @endif
                             </div>
+                        @endif
+                    </div>
+                @endif
 
-                            <!-- Selected Categories Display -->
-                            @if (!empty($selectedCategories))
-                                <div class="mt-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">دسته‌های انتخاب شده:</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        @foreach ($categories->whereIn('id', $selectedCategories) as $category)
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                {{ $category->name }}
-                                                <button type="button" wire:click="removeCategory({{ $category->id }})"
-                                                    class="mr-2 text-blue-600 hover:text-blue-800">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
+                <!-- Filters Tab -->
+                @if($activeTab === 'filters')
+                    <div class="space-y-6">
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">فیلترهای محصول</h4>
+                            <p class="text-sm text-gray-600">
+                                این بخش برای تنظیم فیلترهای جستجو و دسته‌بندی محصول استفاده می‌شود.
+                            </p>
                         </div>
 
-                        <!-- Primary Category Selection -->
-                        @if (!empty($selectedCategories))
-                            <div class="mt-4">
-                                <label for="primaryCategory" class="block text-sm font-medium text-gray-700 mb-2">دسته
-                                    اصلی *</label>
-                                <select wire:model="primaryCategory" id="primaryCategory"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="">انتخاب دسته اصلی</option>
-                                    @foreach ($categories->whereIn('id', $selectedCategories) as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <!-- Brand -->
+                        <div>
+                            <label for="selectedBrand" class="block text-sm font-medium text-gray-700 mb-2">برند</label>
+                            <input type="text" id="selectedBrand" wire:model="selectedBrand"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="نام برند محصول">
+                        </div>
+
+                        <!-- Materials -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">مواد اولیه</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                @foreach(['پنبه', 'پشم', 'ابریشم', 'پلی‌استر', 'نایلون', 'چرم', 'فلز', 'پلاستیک'] as $material)
+                                    <label class="flex items-center">
+                                        <input type="checkbox" wire:model="selectedMaterials" value="{{ $material }}" class="text-blue-600 focus:ring-blue-500">
+                                        <span class="mr-2 text-sm">{{ $material }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Product Attributes -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ویژگی‌های اضافی</label>
+                            <div class="space-y-3">
+                                @foreach($productAttributes as $index => $attribute)
+                                    <div class="flex space-x-2 space-x-reverse">
+                                        <input type="text" wire:model="productAttributes.{{ $index }}.name" 
+                                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2" 
+                                            placeholder="نام ویژگی">
+                                        <input type="text" wire:model="productAttributes.{{ $index }}.value" 
+                                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2" 
+                                            placeholder="مقدار ویژگی">
+                                        <button type="button" wire:click="removeAttribute({{ $index }})" 
+                                            class="text-red-600 hover:text-red-800 px-3">
+                                            حذف
+                                        </button>
+                                    </div>
+                                @endforeach
+                                <button type="button" wire:click="addAttribute" 
+                                    class="text-blue-600 hover:text-blue-800 text-sm">
+                                    + افزودن ویژگی
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Images Tab -->
+                @if($activeTab === 'images')
+                    <div class="space-y-6">
+                        <!-- Product Images -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">تصاویر محصول</label>
+                            <input type="file" wire:model="images" multiple accept="image/*"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                            @error('images.*')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">می‌توانید چندین تصویر انتخاب کنید</p>
+                        </div>
+
+                        <!-- Featured Images -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">تصاویر شاخص</label>
+                            <input type="file" wire:model="featuredImages" multiple accept="image/*"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                            @error('featuredImages.*')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-1">تصاویری که در صفحه اصلی و لیست محصولات نمایش داده می‌شوند</p>
+                        </div>
+
+                        <!-- Image Preview -->
+                        @if($images)
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">پیش‌نمایش تصاویر محصول</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    @foreach($images as $image)
+                                        <div class="border border-gray-200 rounded-lg p-2">
+                                            <img src="{{ $image->temporaryUrl() }}" class="w-full h-32 object-cover rounded">
+                                        </div>
                                     @endforeach
-                                </select>
-                                <p class="text-xs text-gray-500 mt-1">دسته اصلی در URL محصول و breadcrumb استفاده می‌شود
-                                </p>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if($featuredImages)
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">پیش‌نمایش تصاویر شاخص</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    @foreach($featuredImages as $image)
+                                        <div class="border border-gray-200 rounded-lg p-2">
+                                            <img src="{{ $image->temporaryUrl() }}" class="w-full h-32 object-cover rounded">
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         @endif
                     </div>
-
-
-
-                    <!-- Stock -->
-                    <div>
-                        <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">موجودی *</label>
-                        <input type="number" id="stock" wire:model="stock" min="0"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="0">
-                        @error('stock')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Discount Settings -->
-        <div class="bg-white shadow rounded-lg mb-6">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">تنظیمات تخفیف</h3>
-                <p class="text-sm text-gray-600 mt-1">تنظیم تخفیف برای محصول</p>
-            </div>
-
-            <div class="p-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Has Discount -->
-                    <div class="lg:col-span-2">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="has_discount" wire:model.live="has_discount"
-                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                            <label for="has_discount" class="mr-2 text-sm font-medium text-gray-700">این محصول تخفیف
-                                دارد</label>
-                        </div>
-                        @error('has_discount')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    @if ($has_discount)
-                        <!-- Original Price -->
-                        <div>
-                            <label for="original_price" class="block text-sm font-medium text-gray-700 mb-2">قیمت اصلی
-                                (تومان)</label>
-                            <input type="number" id="original_price" wire:model="original_price" min="0"
-                                step="1000"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="قیمت قبل از تخفیف">
-                            @error('original_price')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                            <p class="text-xs text-gray-500 mt-1">قیمت اصلی محصول قبل از اعمال تخفیف</p>
-                        </div>
-
-                        <!-- Current Price (After Discount) -->
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت با تخفیف
-                                (تومان) *</label>
-                            <input type="number" id="price" wire:model="price" min="0" step="1000"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="قیمت نهایی محصول">
-                            @error('price')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                            <p class="text-xs text-gray-500 mt-1">قیمت نهایی که مشتری پرداخت می‌کند</p>
-                        </div>
-
-                        <!-- Discount Percentage -->
-                        <div>
-                            <label for="discount_percentage" class="block text-sm font-medium text-gray-700 mb-2">درصد
-                                تخفیف</label>
-                            <input type="number" id="discount_percentage" wire:model="discount_percentage"
-                                min="0" max="100" step="0.01"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="مثال: 20">
-                            @error('discount_percentage')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                            <p class="text-xs text-gray-500 mt-1">درصد تخفیف (0 تا 100)</p>
-                        </div>
-
-                        <!-- Discount Amount -->
-                        <div>
-                            <label for="discount_amount" class="block text-sm font-medium text-gray-700 mb-2">مبلغ
-                                تخفیف (تومان)</label>
-                            <input type="number" id="discount_amount" wire:model="discount_amount" min="0"
-                                step="1000"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="مثال: 50000">
-                            @error('discount_amount')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                            <p class="text-xs text-gray-500 mt-1">مبلغ ثابت تخفیف</p>
-                        </div>
-
-                        <!-- Discount Start Date -->
-                        <div>
-                            <label for="discount_starts_at" class="block text-sm font-medium text-gray-700 mb-2">شروع
-                                تخفیف</label>
-                            <input type="datetime-local" id="discount_starts_at" wire:model="discount_starts_at"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            @error('discount_starts_at')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                            <p class="text-xs text-gray-500 mt-1">خالی بگذارید برای شروع فوری</p>
-                        </div>
-
-                        <!-- Discount End Date -->
-                        <div>
-                            <label for="discount_ends_at" class="block text-sm font-medium text-gray-700 mb-2">پایان
-                                تخفیف</label>
-                            <input type="datetime-local" id="discount_ends_at" wire:model="discount_ends_at"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            @error('discount_ends_at')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                            <p class="text-xs text-gray-500 mt-1">خالی بگذارید برای تخفیف دائمی</p>
-                        </div>
-                    @else
-                        <!-- Regular Price -->
-                        <div class="lg:col-span-2">
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان)
-                                *</label>
-                            <input type="number" id="price" wire:model="price" min="0" step="1000"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="قیمت محصول">
-                            @error('price')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    @endif
-                </div>
-
-                <!-- SKU -->
-                <div>
-                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">کد محصول (SKU)
-                        *</label>
-                    <div class="flex">
-                        <input type="text" id="sku" wire:model="sku"
-                            class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="کد محصول">
-                        <button type="button" wire:click="generateSku"
-                            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-l-lg border border-gray-600">
-                            تولید کد
-                        </button>
-                    </div>
-                    @error('sku')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Status -->
-                <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">وضعیت *</label>
-                    <select wire:model="status" id="status"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="active">فعال</option>
-                        <option value="draft">پیش‌نویس</option>
-                        <option value="out_of_stock">ناموجود</option>
-                    </select>
-                    @error('status')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Description -->
-                <div class="lg:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات</label>
-                    <textarea wire:model="description" id="description" rows="4"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="توضیحات محصول را وارد کنید..."></textarea>
-                    @error('description')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-        </div>
-
-<!-- SEO Settings -->
-<div class="bg-white shadow rounded-lg mb-6">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">تنظیمات SEO</h3>
-        <p class="text-sm text-gray-600 mt-1">بهینه‌سازی محصول برای موتورهای جستجو</p>
-    </div>
-
-    <div class="p-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Meta Title -->
-            <div class="lg:col-span-2">
-                <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان متا (Meta
-                    Title)</label>
-                <input type="text" id="meta_title" wire:model="meta_title" maxlength="255"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="عنوان صفحه در نتایج جستجو">
-                @error('meta_title')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-                <p class="text-xs text-gray-500 mt-1">حداکثر 255 کاراکتر - در صورت خالی بودن از نام محصول استفاده
-                    می‌شود</p>
-            </div>
-
-            <!-- Meta Description -->
-            <div class="lg:col-span-2">
-                <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات متا (Meta
-                    Description)</label>
-                <textarea wire:model="meta_description" id="meta_description" rows="3" maxlength="160"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="توضیح کوتاه محصول برای نمایش در نتایج جستجو"></textarea>
-                @error('meta_description')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-                <p class="text-xs text-gray-500 mt-1">حداکثر 160 کاراکتر - در صورت خالی بودن از توضیحات محصول استفاده
-                    می‌شود</p>
-            </div>
-
-            <!-- Meta Keywords -->
-            <div class="lg:col-span-2">
-                <label for="meta_keywords" class="block text-sm font-medium text-gray-700 mb-2">کلمات کلیدی (Meta
-                    Keywords)</label>
-                <input type="text" id="meta_keywords" wire:model="meta_keywords"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="کلمات کلیدی را با کاما جدا کنید">
-                @error('meta_keywords')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-                <p class="text-xs text-gray-500 mt-1">کلمات کلیدی مرتبط با محصول، با کاما جدا شده</p>
-            </div>
-
-            <!-- Open Graph Title -->
-            <div>
-                <label for="og_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان شبکه‌های اجتماعی (OG
-                    Title)</label>
-                <input type="text" id="og_title" wire:model="og_title" maxlength="255"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="عنوان برای اشتراک‌گذاری در شبکه‌های اجتماعی">
-                @error('og_title')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Open Graph Image -->
-            <div>
-                <label for="og_image" class="block text-sm font-medium text-gray-700 mb-2">تصویر شبکه‌های اجتماعی (OG
-                    Image)</label>
-                <input type="url" id="og_image" wire:model="og_image"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://example.com/image.jpg">
-                @error('og_image')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Open Graph Description -->
-            <div class="lg:col-span-2">
-                <label for="og_description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات شبکه‌های
-                    اجتماعی (OG Description)</label>
-                <textarea wire:model="og_description" id="og_description" rows="3"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="توضیحات برای اشتراک‌گذاری در شبکه‌های اجتماعی"></textarea>
-                @error('og_description')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Product Images -->
-<div class="bg-white shadow rounded-lg mb-6">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">تصاویر محصول</h3>
-        <p class="text-sm text-gray-600 mt-1">آپلود تصاویر محصول و تصاویر شاخص</p>
-    </div>
-
-    <div class="p-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Regular Images -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">تصاویر عادی</label>
-                <div
-                    class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                    <input type="file" wire:model="images" multiple accept="image/*" class="hidden"
-                        id="regular-images">
-                    <label for="regular-images" class="cursor-pointer">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none"
-                            viewBox="0 0 48 48">
-                            <path
-                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <div class="mt-4">
-                            <p class="text-sm text-gray-600">کلیک کنید یا فایل‌ها را اینجا بکشید</p>
-                            <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF تا 2MB</p>
-                        </div>
-                    </label>
-                </div>
-                @error('images.*')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-
-                @if($images)
-                    <div class="mt-3">
-                        <p class="text-sm text-gray-600 mb-2">{{ count($images) }} فایل انتخاب شده</p>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                            @foreach($images as $index => $image)
-                                <div class="relative">
-                                    <img src="{{ $image->temporaryUrl() }}" 
-                                         alt="Preview" 
-                                         class="w-full h-20 object-cover rounded border">
-                                    <button type="button" 
-                                            wire:click="removeImage({{ $index }})" 
-                                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
-                                        ×
-                                    </button>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
                 @endif
-            </div>
 
-            <!-- Featured Images -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">تصاویر شاخص</label>
-                <div
-                    class="border-2 border-dashed border-yellow-300 rounded-lg p-6 text-center hover:border-yellow-400 transition-colors">
-                    <input type="file" wire:model="featuredImages" multiple accept="image/*" class="hidden"
-                        id="featured-images">
-                    <label for="featured-images" class="cursor-pointer">
-                        <svg class="mx-auto h-12 w-12 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
-                            </path>
-                        </svg>
-                        <div class="mt-4">
-                            <p class="text-sm text-gray-600">تصاویر شاخص محصول</p>
-                            <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF تا 2MB</p>
+                <!-- SEO Tab -->
+                @if($activeTab === 'seo')
+                    <div class="space-y-6">
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">بهینه‌سازی موتورهای جستجو</h4>
+                            <p class="text-sm text-gray-600">
+                                این اطلاعات برای بهبود رتبه محصول در موتورهای جستجو استفاده می‌شود.
+                            </p>
                         </div>
-                    </label>
-                </div>
-                @error('featuredImages.*')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
 
-                @if($featuredImages)
-                    <div class="mt-3">
-                        <p class="text-sm text-gray-600 mb-2">{{ count($featuredImages) }} فایل انتخاب شده</p>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                            @foreach($featuredImages as $index => $image)
-                                <div class="relative">
-                                    <img src="{{ $image->temporaryUrl() }}" 
-                                         alt="Featured Preview" 
-                                         class="w-full h-20 object-cover rounded border-2 border-yellow-300">
-                                    <button type="button" 
-                                            wire:click="removeFeaturedImage({{ $index }})" 
-                                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
-                                        ×
-                                    </button>
-                                    <span class="absolute top-1 right-1 bg-yellow-500 text-white text-xs px-1 rounded">شاخص</span>
-                                </div>
-                            @endforeach
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- Meta Title -->
+                            <div>
+                                <label for="meta_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان متا</label>
+                                <input type="text" id="meta_title" wire:model="meta_title"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="عنوان برای موتورهای جستجو">
+                                @error('meta_title')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Meta Description -->
+                            <div>
+                                <label for="meta_description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات متا</label>
+                                <textarea id="meta_description" wire:model="meta_description" rows="3"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="توضیحات برای موتورهای جستجو"></textarea>
+                                @error('meta_description')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Meta Keywords -->
+                            <div>
+                                <label for="meta_keywords" class="block text-sm font-medium text-gray-700 mb-2">کلمات کلیدی</label>
+                                <input type="text" id="meta_keywords" wire:model="meta_keywords"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="کلمات کلیدی با کاما جدا شوند">
+                                @error('meta_keywords')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- OG Title -->
+                            <div>
+                                <label for="og_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان شبکه‌های اجتماعی</label>
+                                <input type="text" id="og_title" wire:model="og_title"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="عنوان برای اشتراک‌گذاری در شبکه‌های اجتماعی">
+                                @error('og_title')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- OG Description -->
+                            <div>
+                                <label for="og_description" class="block text-sm font-medium text-gray-700 mb-2">توضیحات شبکه‌های اجتماعی</label>
+                                <textarea id="og_description" wire:model="og_description" rows="3"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="توضیحات برای اشتراک‌گذاری در شبکه‌های اجتماعی"></textarea>
+                                @error('og_description')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 @endif
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Product Attributes -->
-<div class="bg-white shadow rounded-lg mb-6">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">ویژگی‌های محصول</h3>
-        <p class="text-sm text-gray-600 mt-1">مشخصات فنی و ویژگی‌های محصول</p>
-    </div>
-
-    <div class="p-6">
-        @foreach ($productAttributes as $index => $attribute)
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 border border-gray-200 rounded-lg">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">نام ویژگی</label>
-                    <input type="text" wire:model="productAttributes.{{ $index }}.name"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="مثال: رنگ، سایز، جنس">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">مقدار ویژگی</label>
-                    <div class="flex">
-                        <input type="text" wire:model="productAttributes.{{ $index }}.value"
-                            class="flex-1 border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="مثال: قرمز، XL، پنبه">
-                        @if (count($productAttributes) > 1)
-                            <button type="button" wire:click="removeAttribute({{ $index }})"
-                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-l-lg">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                    </path>
-                                </svg>
-                            </button>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endforeach
-
-        <button type="button" wire:click="addAttribute"
-            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                </path>
-            </svg>
-            افزودن ویژگی جدید
-        </button>
-    </div>
-</div>
-
-<!-- Submit Buttons -->
-<div class="bg-white shadow rounded-lg">
-    <div class="p-6">
+        <!-- Action Buttons -->
         <div class="flex justify-end space-x-3 space-x-reverse">
             <a href="{{ route('admin.products.index') }}"
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-lg">
                 انصراف
             </a>
             <button type="submit" wire:loading.attr="disabled"
-                class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg flex items-center">
-                <span wire:loading.remove>ایجاد محصول</span>
-                <span wire:loading class="flex items-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
-                        fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                            stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                    </svg>
-                    در حال ایجاد...
-                </span>
+                class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg">
+                <span wire:loading.remove>ذخیره محصول</span>
+                <span wire:loading>در حال ذخیره...</span>
             </button>
         </div>
-    </div>
-</div>
-</form>
-
-<!-- Info Box -->
-<div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-    <div class="flex items-start">
-        <svg class="w-5 h-5 text-blue-600 mt-0.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <div>
-            <p class="text-sm text-blue-800 font-medium">نکات مهم</p>
-            <ul class="text-xs text-blue-700 mt-1 list-disc list-inside">
-                <li>فیلدهای ستاره‌دار (*) الزامی هستند</li>
-                <li>اسلاگ به صورت خودکار از ترجمه انگلیسی نام محصول تولید می‌شود</li>
-                <li>حداقل یک دسته‌بندی باید انتخاب شود</li>
-                <li>تصاویر شاخص در صفحه اصلی محصول نمایش داده می‌شوند</li>
-                <li>تنظیمات SEO برای بهبود رتبه در موتورهای جستجو مهم است</li>
-                <li>ویژگی‌های محصول برای نمایش مشخصات فنی استفاده می‌شود</li>
-            </ul>
-        </div>
-    </div>
-</div>
-</form>
+    </form>
 </div>

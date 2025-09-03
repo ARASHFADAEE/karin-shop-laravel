@@ -83,4 +83,20 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAddress::class)->where('is_default', true);
     }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is customer
+     */
+    public function isCustomer(): bool
+    {
+        return $this->role === 'customer' || $this->role === null;
+    }
 }

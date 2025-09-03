@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\ProductAttribute;
 use App\Models\ProductImage;
 use App\Models\ProductFeaturedImage;
+use App\Models\ProductVariant;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -92,7 +93,23 @@ class Create extends Component
         ['name' => '', 'value' => '']
     ];
 
+    // Product Variants
+    public array $productVariants = [];
+    public bool $hasVariants = false;
+    public string $variantType = 'simple'; // simple, variable
+    
+    // Filter Values
+    public array $filterValues = [];
+    public string $selectedBrand = '';
+    public array $selectedColors = [];
+    public array $selectedSizes = [];
+    public array $selectedMaterials = [];
+    
+    // UI State
+    public string $activeTab = 'basic'; // basic, variants, filters, seo, images
     public bool $isGeneratingSlug = false;
+    public bool $showVariantForm = false;
+    public int $editingVariantIndex = -1;
 
     public function mount()
     {
@@ -290,15 +307,165 @@ class Create extends Component
             ]);
         }
 
-        session()->flash('success', 'محصول جدید با موفقیت ایجاد شد.');
+        // Save variants if product has variants
+        if ($this->hasVariants && !empty($this->productVariants)) {
+            foreach ($this->productVariants as $index => $variant) {
+                if (!empty($variant['color']) || !empty($variant['size']) || !empty($variant['name'])) {
+                    $variantData = [
+                        'product_id' => $product->id,
+                        'name' => $variant['name'] ?? '',
+                        'sku' => $variant['sku'] ?? $this->generateVariantSku($product->sku, $variant),
+                        'price' => $variant['price'] ?? $this->price,
+                        'original_price' => $variant['original_price'] ?? $this->original_price,
+                        'stock' => $variant['stock'] ?? 0,
+                        'color' => $variant['color'] ?? null,
+                        'size' => $variant['size'] ?? null,
+                        'material' => $variant['material'] ?? null,
+                        'brand' => $this->selectedBrand ?: null,
+                        'status' => 'active',
+                        'is_default' => $index === 0,
+                        'sort_order' => $index
+                    ];
+                    
+                    ProductVariant::create($variantData);
+                }
+            }
+        } else {
+            // Create default variant for simple products
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'name' => 'پیش‌فرض',
+                'sku' => $product->sku,
+                'price' => $this->price,
+                'original_price' => $this->original_price,
+                'stock' => $this->stock,
+                'brand' => $this->selectedBrand ?: null,
+                'status' => 'active',
+                'is_default' => true,
+                'sort_order' => 0
+            ]);
+        }
+
+        session()->flash('success', 'محصول با موفقیت ایجاد شد.');
         
         return $this->redirect(route('admin.products.index'), navigate: true);
     }
+
+    // Variant Management Methods
+    public function addVariant()
+    {
+        $this->productVariants[] = [
+            'name' => '',
+            'sku' => '',
+            'price' => $this->price,
+            'original_price' => $this->original_price,
+            'stock' => 0,
+            'color' => '',
+            'size' => '',
+            'material' => '',
+            'weight' => '',
+            'status' => 'active'
+        ];
+    }
+
+    public function removeVariant($index)
+    {
+        unset($this->productVariants[$index]);
+        $this->productVariants = array_values($this->productVariants);
+    }
+
+    public function generateVariantSku($baseSku, $variant)
+    {
+        $suffix = '';
+        if (!empty($variant['color'])) {
+            $suffix .= strtoupper(substr($variant['color'], 0, 3));
+        }
+        if (!empty($variant['size'])) {
+            $suffix .= strtoupper(substr($variant['size'], 0, 3));
+        }
+        
+        return $baseSku . ($suffix ? '-' . $suffix : '-VAR' . (count($this->productVariants) + 1));
+    }
+
+    public function generateVariantsFromCombinations()
+    {
+        if (empty($this->selectedColors) && empty($this->selectedSizes)) {
+            return;
+        }
+
+        $this->productVariants = [];
+        $colors = $this->selectedColors ?: [''];
+        $sizes = $this->selectedSizes ?: [''];
+
+        foreach ($colors as $color) {
+            foreach ($sizes as $size) {
+                $name = trim(implode(' - ', array_filter([$color, $size])));
+                $this->productVariants[] = [
+                    'name' => $name ?: 'پیش‌فرض',
+                    'sku' => $this->generateVariantSku($this->sku, ['color' => $color, 'size' => $size]),
+                    'price' => $this->price,
+                    'original_price' => $this->original_price,
+                    'stock' => 0,
+                    'color' => $color,
+                    'size' => $size,
+                    'material' => '',
+                    'weight' => '',
+                    'status' => 'active'
+                ];
+            }
+        }
+    }
+
+    public function updatedHasVariants()
+    {
+        if ($this->hasVariants) {
+            $this->variantType = 'variable';
+            if (empty($this->productVariants)) {
+                $this->addVariant();
+            }
+        } else {
+            $this->variantType = 'simple';
+            $this->productVariants = [];
+        }
+    }
+
+    public function updatedSelectedColors()
+    {
+        if ($this->hasVariants) {
+            $this->generateVariantsFromCombinations();
+        }
+    }
+
+    public function updatedSelectedSizes()
+    {
+        if ($this->hasVariants) {
+            $this->generateVariantsFromCombinations();
+        }
+    }
+
+    // Tab Management
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
+
+    // Category Events
+    public function categoriesUpdated($data)
+    {
+        $this->selectedCategories = $data['selectedCategories'];
+        $this->primaryCategory = $data['primaryCategory'];
+    }
+
+
+
+
 
     #[Layout('layouts.admin')]
     public function render()
     {
         $categories = Category::all();
-        return view('livewire.admin.products.create', compact('categories'));
+        $filters = \App\Models\ProductFilter::where('is_active', true)->orderBy('sort_order')->get();
+        
+        return view('livewire.admin.products.create', compact('categories', 'filters'));
     }
 }

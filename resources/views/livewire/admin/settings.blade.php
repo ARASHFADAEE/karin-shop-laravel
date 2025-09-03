@@ -435,6 +435,177 @@
             </div>
         </div>
 
+        <!-- Melli Payamak SMS Settings -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">تنظیمات ملی پیامک</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="melli_payamak_username" class="block text-sm font-medium text-gray-700 mb-2">نام کاربری</label>
+                    <input type="text" 
+                           id="melli_payamak_username"
+                           wire:model="melli_payamak_username" 
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="نام کاربری ملی پیامک">
+                    @error('melli_payamak_username')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="melli_payamak_password" class="block text-sm font-medium text-gray-700 mb-2">رمز عبور</label>
+                    <input type="password" 
+                           id="melli_payamak_password"
+                           wire:model="melli_payamak_password" 
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="رمز عبور ملی پیامک">
+                    @error('melli_payamak_password')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="melli_payamak_sender_number" class="block text-sm font-medium text-gray-700 mb-2">شماره فرستنده</label>
+                    <input type="text" 
+                           id="melli_payamak_sender_number"
+                           wire:model="melli_payamak_sender_number" 
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="شماره فرستنده">
+                    @error('melli_payamak_sender_number')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <!-- SMS Pattern Settings -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">تنظیمات پترن پیامکی</h3>
+            
+            <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-800 mb-4">پترن‌های مشتری</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label for="sms_pattern_login_code" class="block text-sm font-medium text-gray-700 mb-2">کد ورود یکبار مصرف</label>
+                        <input type="text" 
+                               id="sms_pattern_login_code"
+                               wire:model="sms_pattern_login_code" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای کد ورود">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: کد یک بار مصرف شما {0} میباشد</p>
+                        @error('sms_pattern_login_code')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="sms_pattern_order_created" class="block text-sm font-medium text-gray-700 mb-2">ثبت سفارش</label>
+                        <input type="text" 
+                               id="sms_pattern_order_created"
+                               wire:model="sms_pattern_order_created" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای ثبت سفارش">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: سلام {0} عزیز، سفارش {1} دریافت شد و هم اکنون در وضعیت در انتظار پرداخت می‌باشد. آیتم های سفارش: {2} مبلغ سفارش: {3}</p>
+                        @error('sms_pattern_order_created')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="sms_pattern_order_processing" class="block text-sm font-medium text-gray-700 mb-2">در حال پردازش</label>
+                        <input type="text" 
+                               id="sms_pattern_order_processing"
+                               wire:model="sms_pattern_order_processing" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای وضعیت در حال پردازش">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: سلام {0} عزیز، وضعیت سفارش {1} به {2} تغییر یافت.</p>
+                        @error('sms_pattern_order_processing')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="sms_pattern_order_shipped" class="block text-sm font-medium text-gray-700 mb-2">ارسال شده</label>
+                        <input type="text" 
+                               id="sms_pattern_order_shipped"
+                               wire:model="sms_pattern_order_shipped" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای وضعیت ارسال شده">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: سلام {0} عزیز، وضعیت سفارش {1} به {2} تغییر یافت.</p>
+                        @error('sms_pattern_order_shipped')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="sms_pattern_order_delivered" class="block text-sm font-medium text-gray-700 mb-2">تحویل داده شده</label>
+                        <input type="text" 
+                               id="sms_pattern_order_delivered"
+                               wire:model="sms_pattern_order_delivered" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای وضعیت تحویل داده شده">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: سلام {0} عزیز، وضعیت سفارش {1} به {2} تغییر یافت.</p>
+                        @error('sms_pattern_order_delivered')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="sms_pattern_order_cancelled" class="block text-sm font-medium text-gray-700 mb-2">لغو شده</label>
+                        <input type="text" 
+                               id="sms_pattern_order_cancelled"
+                               wire:model="sms_pattern_order_cancelled" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای وضعیت لغو شده">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: سلام {0} عزیز، وضعیت سفارش {1} به {2} تغییر یافت.</p>
+                        @error('sms_pattern_order_cancelled')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-800 mb-4">پترن‌های مدیریتی</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label for="sms_pattern_admin_new_order" class="block text-sm font-medium text-gray-700 mb-2">سفارش جدید برای ادمین</label>
+                        <input type="text" 
+                               id="sms_pattern_admin_new_order"
+                               wire:model="sms_pattern_admin_new_order" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای اطلاع ادمین از سفارش جدید">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: سفارش جدید - شماره: {0} مشتری: {1} مبلغ: {2}</p>
+                        @error('sms_pattern_admin_new_order')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="sms_pattern_admin_low_stock" class="block text-sm font-medium text-gray-700 mb-2">کمبود موجودی</label>
+                        <input type="text" 
+                               id="sms_pattern_admin_low_stock"
+                               wire:model="sms_pattern_admin_low_stock" 
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="کد پترن برای اطلاع ادمین از کمبود موجودی">
+                        <p class="text-xs text-gray-500 mt-1">نمونه پیامک: هشدار کمبود موجودی - محصول: {0} موجودی باقیمانده: {1}</p>
+                        @error('sms_pattern_admin_low_stock')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h5 class="text-sm font-medium text-blue-800 mb-2">راهنمای استفاده از پترن‌ها</h5>
+                <ul class="text-xs text-blue-700 space-y-1">
+                    <li>• {0}, {1}, {2} و ... نشان‌دهنده متغیرهای پیامک هستند</li>
+                    <li>• این پترن‌ها باید در پنل ملی پیامک شما تعریف شده باشند</li>
+                    <li>• در صورت خالی بودن پترن، پیامک پیش‌فرض ارسال می‌شود</li>
+                    <li>• برای تست پترن‌ها، ابتدا آن‌ها را در پنل ملی پیامک تست کنید</li>
+                </ul>
+            </div>
+        </div>
+
         <!-- Security Warning -->
         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <div class="flex items-start">

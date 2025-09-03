@@ -23,6 +23,10 @@ use App\Livewire\Admin\Coupons\Create as CouponsCreate;
 use App\Livewire\Admin\Coupons\Edit as CouponsEdit;
 use App\Livewire\Admin\Reviews\Index as ReviewsIndex;
 use App\Livewire\Admin\Settings;
+use App\Livewire\Admin\MediaGallery;
+use App\Livewire\Admin\Tickets\Index as TicketsIndex;
+use App\Livewire\Admin\Tickets\Show as TicketsShow;
+use App\Livewire\Admin\Tickets\Create as TicketsCreate;
 use App\Livewire\Auth\Login;
 use App\Http\Controllers\Admin\OrderPrintController;
 
@@ -72,6 +76,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Reviews Management
     Route::get('/reviews', ReviewsIndex::class)->name('reviews.index');
+    
+    // Media Gallery
+    Route::get('/media', MediaGallery::class)->name('media.index');
+    
+    // Support Tickets
+    Route::get('/tickets', TicketsIndex::class)->name('tickets.index');
+    Route::get('/tickets/create', TicketsCreate::class)->name('tickets.create');
+    Route::get('/tickets/{ticket}', TicketsShow::class)->name('tickets.show');
     
     // Settings
     Route::get('/settings', Settings::class)->name('settings');
